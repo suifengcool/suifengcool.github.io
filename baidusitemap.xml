@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://suifengcool.github.io/2020/11/25/Javascript%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83/</loc>
+    <lastmod>2020-11-30</lastmod>
+  </url>
+  <url>
     <loc>https://suifengcool.github.io/2017/12/22/%E4%BD%BF%E7%94%A8hexo-github-Yilia%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</loc>
     <lastmod>2020-11-30</lastmod>
   </url>
@@ -14,10 +18,6 @@
   </url>
   <url>
     <loc>https://suifengcool.github.io/2018/03/27/%E8%A7%A3%E5%86%B3%E4%BD%BF%E7%94%A8axios%E5%90%8EPOST%E8%AF%B7%E6%B1%82%E4%BC%9A%E5%87%BA%E7%8E%B0OPTIONS%E9%A2%84%E8%AF%B7%E6%B1%82%E9%97%AE%E9%A2%98/</loc>
-    <lastmod>2020-11-30</lastmod>
-  </url>
-  <url>
-    <loc>https://suifengcool.github.io/2020/11/25/Javascript%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83/</loc>
     <lastmod>2020-11-30</lastmod>
   </url>
   <url>
