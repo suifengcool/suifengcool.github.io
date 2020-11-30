@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ES6中 export default 和 export 区别</title>
+    <url>/2017/12/08/ES6-export-default-%E5%92%8C-export-%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<blockquote>
+<p>es6渐入主流，export default 和 export经常使用，但是偶尔也会采坑，难得今天公司网络故障，没法做事，正好可以写点心得，避免后面遗忘。</p>
+</blockquote>
+<ul>
+<li>export：使用命名导出</li>
+<li>export default：使用默认导出</li>
+</ul>
+<a id="more"></a>
+<h4 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h4><ul>
+<li>1、 export 与 export default 均可用于导出常量、函数、文件、模块等；</li>
+<li>2、均可以在其他模块和文件使用import的方式进行导入使用；</li>
+</ul>
+<h4 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h4><ul>
+<li>1、通过export方式导出，在导入时需以对象方式进行导入，即加上{xxx}，但是export default不需要；</li>
+<li>2、 在一个导出文件或模块中，export可以有很多个，但是export default 只能有一个。</li>
+<li>3、 使用export default进行导出，导入时可以使用任意变量名称</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1.使用<span class="built_in">export</span>导出</span><br><span class="line"></span><br><span class="line">①方式一</span><br><span class="line">// utils.js 导出文件</span><br><span class="line"><span class="built_in">export</span> const setCookie = (name, value, time) =&gt; &#123;</span><br><span class="line">    <span class="built_in">let</span> days = time || 7;    // 默认保存7天</span><br><span class="line">    <span class="built_in">let</span> exp = new Date();</span><br><span class="line">    const PATH = location.pathname.split(<span class="string">'/'</span>)[1];</span><br><span class="line">    <span class="built_in">let</span> _path = (PATH.length == 0 || PATH.indexOf(<span class="string">'.'</span>) != -1) ? <span class="string">'/'</span> : PATH;</span><br><span class="line">    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);</span><br><span class="line">    document.cookie = `<span class="variable">$&#123;name&#125;</span>=<span class="variable">$&#123;escape(value)&#125;</span>;path=<span class="variable">$&#123;_path&#125;</span>;expires=<span class="variable">$&#123;exp.toGMTString()&#125;</span>`;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> <span class="keyword">function</span> getCookie(name)&#123;</span><br><span class="line">    <span class="built_in">let</span> arr, reg = new RegExp(<span class="string">"(^| )"</span> + name + <span class="string">"=([^;]*)(;|$)"</span>)</span><br><span class="line">    <span class="keyword">if</span> (arr = document.cookie.match(reg))</span><br><span class="line">        <span class="built_in">return</span> unescape(arr[2]);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">return</span> null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//b.js 导入文件</span><br><span class="line">import &#123; setCookie, getCookie &#125; from <span class="string">'./utils'</span>; //也可以分开写两次，导入的时候带花括号</span><br><span class="line"></span><br><span class="line">②方式二</span><br><span class="line">// foo.js 导出文件</span><br><span class="line"><span class="built_in">export</span> <span class="keyword">function</span> foo2(x) &#123;</span><br><span class="line">  <span class="built_in">return</span> x * x * x;</span><br><span class="line">&#125;</span><br><span class="line">const foo2 = Math.floor(Math.random()*9 + 3);</span><br><span class="line"><span class="built_in">export</span> &#123; foo1,foo2 &#125;;</span><br><span class="line"></span><br><span class="line">// use.js 导入文件</span><br><span class="line">import &#123; foo1, foo2 &#125; from <span class="string">'foo.js'</span>;</span><br><span class="line">console.log(foo1(3)); // 27</span><br><span class="line">console.log(foo2);    // 3-12之间随机数</span><br><span class="line"></span><br><span class="line">2.使用<span class="built_in">export</span> default导出</span><br><span class="line">// utils.js</span><br><span class="line">const unique = (a) =&gt; &#123;</span><br><span class="line">    var <span class="built_in">hash</span> = &#123;&#125;,</span><br><span class="line">        len = a.length,</span><br><span class="line">        arr = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (var i = 0; i &lt; len; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">hash</span>[a[i]]) &#123;</span><br><span class="line">            <span class="built_in">hash</span>[a[i]] = <span class="literal">true</span>;</span><br><span class="line">            arr.push(a[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> default unique;</span><br><span class="line"></span><br><span class="line">//b.js 导入文件</span><br><span class="line">import unique from <span class="string">'./utils'</span>; //注意，导入的时候没有花括号</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JS 数组map()方法到底会不会改变原数组</title>
     <url>/2018/01/22/JS-%E6%95%B0%E7%BB%84map-%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E4%BC%9A%E4%B8%8D%E4%BC%9A%E6%94%B9%E5%8F%98%E5%8E%9F%E6%95%B0%E7%BB%84/</url>
     <content><![CDATA[<p>　　之前写过关于js数组map()的一篇文章，当时的结论是map()会改变原数组，后来仔细想了一下，其实这个结论很不严谨。那到底结论如何呢，先不慌，看以下两个示例：<br>　　<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr1 = [<span class="string">'xugang'</span>,<span class="string">'wangran'</span>]</span><br><span class="line">arr1.map((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item += <span class="string">'good'</span></span><br><span class="line">&#125;)</span><br><span class="line">arr1 //arr1 = [<span class="string">'xugang'</span>,<span class="string">'wangran'</span>]</span><br></pre></td></tr></table></figure></p>
@@ -39,31 +64,6 @@
       <tags>
         <tag>JS</tag>
         <tag>数组</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ES6中 export default 和 export 区别</title>
-    <url>/2017/12/08/ES6-export-default-%E5%92%8C-export-%E5%8C%BA%E5%88%AB/</url>
-    <content><![CDATA[<blockquote>
-<p>es6渐入主流，export default 和 export经常使用，但是偶尔也会采坑，难得今天公司网络故障，没法做事，正好可以写点心得，避免后面遗忘。</p>
-</blockquote>
-<ul>
-<li>export：使用命名导出</li>
-<li>export default：使用默认导出</li>
-</ul>
-<a id="more"></a>
-<h4 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h4><ul>
-<li>1、 export 与 export default 均可用于导出常量、函数、文件、模块等；</li>
-<li>2、均可以在其他模块和文件使用import的方式进行导入使用；</li>
-</ul>
-<h4 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h4><ul>
-<li>1、通过export方式导出，在导入时需以对象方式进行导入，即加上{xxx}，但是export default不需要；</li>
-<li>2、 在一个导出文件或模块中，export可以有很多个，但是export default 只能有一个。</li>
-<li>3、 使用export default进行导出，导入时可以使用任意变量名称</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1.使用<span class="built_in">export</span>导出</span><br><span class="line"></span><br><span class="line">①方式一</span><br><span class="line">// utils.js 导出文件</span><br><span class="line"><span class="built_in">export</span> const setCookie = (name, value, time) =&gt; &#123;</span><br><span class="line">    <span class="built_in">let</span> days = time || 7;    // 默认保存7天</span><br><span class="line">    <span class="built_in">let</span> exp = new Date();</span><br><span class="line">    const PATH = location.pathname.split(<span class="string">'/'</span>)[1];</span><br><span class="line">    <span class="built_in">let</span> _path = (PATH.length == 0 || PATH.indexOf(<span class="string">'.'</span>) != -1) ? <span class="string">'/'</span> : PATH;</span><br><span class="line">    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);</span><br><span class="line">    document.cookie = `<span class="variable">$&#123;name&#125;</span>=<span class="variable">$&#123;escape(value)&#125;</span>;path=<span class="variable">$&#123;_path&#125;</span>;expires=<span class="variable">$&#123;exp.toGMTString()&#125;</span>`;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> <span class="keyword">function</span> getCookie(name)&#123;</span><br><span class="line">    <span class="built_in">let</span> arr, reg = new RegExp(<span class="string">"(^| )"</span> + name + <span class="string">"=([^;]*)(;|$)"</span>)</span><br><span class="line">    <span class="keyword">if</span> (arr = document.cookie.match(reg))</span><br><span class="line">        <span class="built_in">return</span> unescape(arr[2]);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">return</span> null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//b.js 导入文件</span><br><span class="line">import &#123; setCookie, getCookie &#125; from <span class="string">'./utils'</span>; //也可以分开写两次，导入的时候带花括号</span><br><span class="line"></span><br><span class="line">②方式二</span><br><span class="line">// foo.js 导出文件</span><br><span class="line"><span class="built_in">export</span> <span class="keyword">function</span> foo2(x) &#123;</span><br><span class="line">  <span class="built_in">return</span> x * x * x;</span><br><span class="line">&#125;</span><br><span class="line">const foo2 = Math.floor(Math.random()*9 + 3);</span><br><span class="line"><span class="built_in">export</span> &#123; foo1,foo2 &#125;;</span><br><span class="line"></span><br><span class="line">// use.js 导入文件</span><br><span class="line">import &#123; foo1, foo2 &#125; from <span class="string">'foo.js'</span>;</span><br><span class="line">console.log(foo1(3)); // 27</span><br><span class="line">console.log(foo2);    // 3-12之间随机数</span><br><span class="line"></span><br><span class="line">2.使用<span class="built_in">export</span> default导出</span><br><span class="line">// utils.js</span><br><span class="line">const unique = (a) =&gt; &#123;</span><br><span class="line">    var <span class="built_in">hash</span> = &#123;&#125;,</span><br><span class="line">        len = a.length,</span><br><span class="line">        arr = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (var i = 0; i &lt; len; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">hash</span>[a[i]]) &#123;</span><br><span class="line">            <span class="built_in">hash</span>[a[i]] = <span class="literal">true</span>;</span><br><span class="line">            arr.push(a[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> default unique;</span><br><span class="line"></span><br><span class="line">//b.js 导入文件</span><br><span class="line">import unique from <span class="string">'./utils'</span>; //注意，导入的时候没有花括号</span><br></pre></td></tr></table></figure>]]></content>
-      <tags>
-        <tag>JS</tag>
       </tags>
   </entry>
   <entry>
@@ -117,6 +117,33 @@
 <p>③ Object.prototype.toString， 能够检测出所有的数据类型， 如下：</p>
   <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Object.prototype.toString.call(1)    // &quot;[object Number]&quot;</span><br><span class="line">Object.prototype.toString.call(&apos;1&apos;)  // &quot;[object String]&quot;</span><br><span class="line">Object.prototype.toString.call(null) // &quot;[object Null]&quot;</span><br><span class="line">Object.prototype.toString.call(&#123;&#125;)   // &quot;[object Object]&quot;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>综上所述，JS检测数据，最优方法如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/*</span><br><span class="line"> * @desc   数据类型检测</span><br><span class="line"> * @params val &#123; any &#125; 待检测的数据</span><br><span class="line"> * @return &#123; String &#125; 类型字符串 </span><br><span class="line"> */</span><br><span class="line">function type(val) &#123;     </span><br><span class="line">	return typeof val !== &quot;object&quot; </span><br><span class="line">		? typeof val </span><br><span class="line">		: Object.prototype.toString.call(val).slice(8, -1).toLowerCase(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Javascript执行环境</title>
+    <url>/2020/11/25/Javascript%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<blockquote>
+<p>一步一步重温 <strong>JavaScript</strong> 基础系列。<br>本章节将会理解JS的执行环境即执行上下文相关概念，包括变量对象、活动对象、以及两者区别</p>
+</blockquote>
+<h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1 概念"></a>1 概念</h2><h3 id="1-1执行环境"><a href="#1-1执行环境" class="headerlink" title="1.1执行环境"></a>1.1执行环境</h3><p>执行环境定义了变量或函数有权访问的其它数据，决定了各自的行为。当JavaScript代码执行的时候，会进入不同的执行环境，这些不同的执行环境就构成了执行环境栈。JavaScript中主要存在三种执行环境：</p>
+<a id="more"></a>
+<ul>
+<li><strong>全局执行环境</strong>，js代码执行的默认环境，在浏览器中，通常为windows对象，所有的全局变量和函数都作为window对象的属性和方法存在。当执行环境中的代码执行完毕之后，执行环境被销毁，其中的所有变量和函数也随之销毁。对于全局执行环境来说，当关闭网页或浏览器时，该环境被销毁；</li>
+<li><strong>局部（函数）执行环境</strong> ，每个函数都有自己的执行环境，当js执行流进入一个函数时，函数的环境会被推入一个环境栈中，当函数执行完毕后，栈将其环境弹出，该环境随即被销毁；</li>
+<li><strong>Eval环境</strong>，由于eval 的性能低、不易调试且有安全问题，一般禁止使用。 </li>
+</ul>
+<p>每个执行环境都有三个重要的属性：变量对象（VO）、作用域链（scope chain）以及 this。</p>
+<h3 id="1-2-变量对象（Variable-Object，简称VO）"><a href="#1-2-变量对象（Variable-Object，简称VO）" class="headerlink" title="1.2 变量对象（Variable Object，简称VO）"></a>1.2 变量对象（Variable Object，简称VO）</h3><p>每个执行环境都有一个与之关联的变量对象，用来保存环境中定义的所有变量和函数。一般来说，VO对象包含变量、形参和函数声明。</p>
+<h3 id="1-3活动对象（Activation-Object，简称AO）"><a href="#1-3活动对象（Activation-Object，简称AO）" class="headerlink" title="1.3活动对象（Activation Object，简称AO）"></a>1.3活动对象（Activation Object，简称AO）</h3><p>函数的执行环境是在调用时创建的，在创建函数执行环境的同时会对应创建一个带有arguments属性的AO对象，该对象将代替VO对象来保存当前函数环境中的变量、参数和函数，所以在函数执行环境中VO就是AO。</p>
+<p>图解如下：</p>
+<p><img src="/images/执行环境01.jpg" alt="按值传递图解"></p>
+<p>注：对于VO来说，函数表达式不包含在VO中，没有使用var声明的变量也不包含在VO中，这种方式只是给Global添加了一个属性。</p>
+<h2 id="2-demo图解"><a href="#2-demo图解" class="headerlink" title="2 demo图解"></a>2 demo图解</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/*</span><br><span class="line"> * 第一步： </span><br><span class="line"> * 当程序加载时全局执行环境就被创建，并且创建一个VO对象来保存当前全局变量与全局函数，</span><br><span class="line"> * 在刚刚创建的VO对象中，变量的值被保存为undefined，函数属性的值保存为对应的函数体 </span><br><span class="line"> * 全局执行环境 ==&gt; VO = &#123;</span><br><span class="line"> 		a: undefined,</span><br><span class="line"> 		fn1: fn1函数体,</span><br><span class="line"> 		fn3: fn3函数体</span><br><span class="line">	&#125;</span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">var a = &quot;global&quot;;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line"> * 第二步： </span><br><span class="line"> * 当程序执行到此处时，变量a执行赋值操作，VO对象中的属性g的值发生变化</span><br><span class="line"> * 全局执行环境 ==&gt; VO = &#123;</span><br><span class="line"> 		a: &quot;global&quot;,</span><br><span class="line"> 		fn1: fn1函数体,</span><br><span class="line"> 		fn3: fn3函数体</span><br><span class="line">	&#125;</span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">function fn3(num)&#123;</span><br><span class="line">   console.log(num);  </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">function fn1(num1,num2)&#123;</span><br><span class="line">	var b = num1 + num2;</span><br><span class="line"></span><br><span class="line">	function fn2(num3)&#123;</span><br><span class="line">		var c = ++num3;</span><br><span class="line">		fn3(c);</span><br><span class="line">		/*第五步*/</span><br><span class="line">	&#125;  </span><br><span class="line"></span><br><span class="line">	fn2(b);</span><br><span class="line">	/*第四步*/</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">fn1(2,5);</span><br><span class="line">/*</span><br><span class="line"> * 第三步： </span><br><span class="line"> * 发现fn1函数被调用并传参，那么就进入fn1函数内部并创建fn1执行环境，由于在函数执行环境中</span><br><span class="line"> * VO是无法直接访问的，所以当fn1环境被创建时，会同时创建一个AO对象，其默认带有一个arg属性</span><br><span class="line"> * 这个属性保存了函数调用时传入的实参，该AO对象同时也会保存fn1函数的形参num1,num2并赋值，</span><br><span class="line"> * 保存局部变量b，b的值为undefined， 函数属性的值保存为对应的函数体 </span><br><span class="line"> * fn1执行环境 ==&gt; AO = &#123;</span><br><span class="line"> 		arguments: [2,5],</span><br><span class="line"> 		num1: 2, </span><br><span class="line"> 		num2: 5, </span><br><span class="line"> 		b= undefined,</span><br><span class="line"> 		fn2: fn2函数体</span><br><span class="line">	&#125;</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
+<p><strong>总结</strong>：<br>① 当程序开始执行，自动创建一个全局执行环境和一个VO对象；<br>② 当函数被调用时，在函数中会创建一个函数执行环境和一个AO对象，AO与VO功能相同；<br>③ 当函数执行环境被创建后，js会创建一个执行环境栈，将当前执行环境入栈，当该函数执行结束之后，其对应的执行环境会从栈中抛出并销毁。</p>
+<h2 id="3-VO和AO的区别"><a href="#3-VO和AO的区别" class="headerlink" title="3 VO和AO的区别"></a>3 VO和AO的区别</h2><p>① 非函数执行环境对应创建一个VO对象；<br>② 函数执行环境对应创建一个默认带有arguments属性的AO对象；<br>③ AO是函数执行环境下的VO，两者的作用是相同的。</p>
 ]]></content>
       <tags>
         <tag>JS</tag>
@@ -211,33 +238,6 @@
 ]]></content>
       <tags>
         <tag>开发工具</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Javascript执行环境</title>
-    <url>/2020/11/25/Javascript%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83/</url>
-    <content><![CDATA[<blockquote>
-<p>一步一步重温 <strong>JavaScript</strong> 基础系列。<br>本章节将会理解JS的执行环境即执行上下文相关概念，包括变量对象、活动对象、以及两者区别</p>
-</blockquote>
-<h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1 概念"></a>1 概念</h2><h3 id="1-1执行环境"><a href="#1-1执行环境" class="headerlink" title="1.1执行环境"></a>1.1执行环境</h3><p>执行环境定义了变量或函数有权访问的其它数据，决定了各自的行为。当JavaScript代码执行的时候，会进入不同的执行环境，这些不同的执行环境就构成了执行环境栈。JavaScript中主要存在三种执行环境：</p>
-<a id="more"></a>
-<ul>
-<li><strong>全局执行环境</strong>，js代码执行的默认环境，在浏览器中，通常为windows对象，所有的全局变量和函数都作为window对象的属性和方法存在。当执行环境中的代码执行完毕之后，执行环境被销毁，其中的所有变量和函数也随之销毁。对于全局执行环境来说，当关闭网页或浏览器时，该环境被销毁；</li>
-<li><strong>局部（函数）执行环境</strong> ，每个函数都有自己的执行环境，当js执行流进入一个函数时，函数的环境会被推入一个环境栈中，当函数执行完毕后，栈将其环境弹出，该环境随即被销毁；</li>
-<li><strong>Eval环境</strong>，由于eval 的性能低、不易调试且有安全问题，一般禁止使用。 </li>
-</ul>
-<p>每个执行环境都有三个重要的属性：变量对象（VO）、作用域链（scope chain）以及 this。</p>
-<h3 id="1-2-变量对象（Variable-Object，简称VO）"><a href="#1-2-变量对象（Variable-Object，简称VO）" class="headerlink" title="1.2 变量对象（Variable Object，简称VO）"></a>1.2 变量对象（Variable Object，简称VO）</h3><p>每个执行环境都有一个与之关联的变量对象，用来保存环境中定义的所有变量和函数。一般来说，VO对象包含变量、形参和函数声明。</p>
-<h3 id="1-3活动对象（Activation-Object，简称AO）"><a href="#1-3活动对象（Activation-Object，简称AO）" class="headerlink" title="1.3活动对象（Activation Object，简称AO）"></a>1.3活动对象（Activation Object，简称AO）</h3><p>函数的执行环境是在调用时创建的，在创建函数执行环境的同时会对应创建一个带有arguments属性的AO对象，该对象将代替VO对象来保存当前函数环境中的变量、参数和函数，所以在函数执行环境中VO就是AO。</p>
-<p>图解如下：</p>
-<p><img src="/images/执行环境01.jpg" alt="按值传递图解"></p>
-<p>注：对于VO来说，函数表达式不包含在VO中，没有使用var声明的变量也不包含在VO中，这种方式只是给Global添加了一个属性。</p>
-<h2 id="2-demo图解"><a href="#2-demo图解" class="headerlink" title="2 demo图解"></a>2 demo图解</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/*</span><br><span class="line"> * 第一步： </span><br><span class="line"> * 当程序加载时全局执行环境就被创建，并且创建一个VO对象来保存当前全局变量与全局函数，</span><br><span class="line"> * 在刚刚创建的VO对象中，变量的值被保存为undefined，函数属性的值保存为对应的函数体 </span><br><span class="line"> * 全局执行环境 ==&gt; VO = &#123;</span><br><span class="line"> 		a: undefined,</span><br><span class="line"> 		fn1: fn1函数体,</span><br><span class="line"> 		fn3: fn3函数体</span><br><span class="line">	&#125;</span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">var a = &quot;global&quot;;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line"> * 第二步： </span><br><span class="line"> * 当程序执行到此处时，变量a执行赋值操作，VO对象中的属性g的值发生变化</span><br><span class="line"> * 全局执行环境 ==&gt; VO = &#123;</span><br><span class="line"> 		a: &quot;global&quot;,</span><br><span class="line"> 		fn1: fn1函数体,</span><br><span class="line"> 		fn3: fn3函数体</span><br><span class="line">	&#125;</span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">function fn3(num)&#123;</span><br><span class="line">   console.log(num);  </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">function fn1(num1,num2)&#123;</span><br><span class="line">	var b = num1 + num2;</span><br><span class="line"></span><br><span class="line">	function fn2(num3)&#123;</span><br><span class="line">		var c = ++num3;</span><br><span class="line">		fn3(c);</span><br><span class="line">		/*第五步*/</span><br><span class="line">	&#125;  </span><br><span class="line"></span><br><span class="line">	fn2(b);</span><br><span class="line">	/*第四步*/</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">fn1(2,5);</span><br><span class="line">/*</span><br><span class="line"> * 第三步： </span><br><span class="line"> * 发现fn1函数被调用并传参，那么就进入fn1函数内部并创建fn1执行环境，由于在函数执行环境中</span><br><span class="line"> * VO是无法直接访问的，所以当fn1环境被创建时，会同时创建一个AO对象，其默认带有一个arg属性</span><br><span class="line"> * 这个属性保存了函数调用时传入的实参，该AO对象同时也会保存fn1函数的形参num1,num2并赋值，</span><br><span class="line"> * 保存局部变量b，b的值为undefined， 函数属性的值保存为对应的函数体 </span><br><span class="line"> * fn1执行环境 ==&gt; AO = &#123;</span><br><span class="line"> 		arguments: [2,5],</span><br><span class="line"> 		num1: 2, </span><br><span class="line"> 		num2: 5, </span><br><span class="line"> 		b= undefined,</span><br><span class="line"> 		fn2: fn2函数体</span><br><span class="line">	&#125;</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
-<p><strong>总结</strong>：<br>① 当程序开始执行，自动创建一个全局执行环境和一个VO对象；<br>② 当函数被调用时，在函数中会创建一个函数执行环境和一个AO对象，AO与VO功能相同；<br>③ 当函数执行环境被创建后，js会创建一个执行环境栈，将当前执行环境入栈，当该函数执行结束之后，其对应的执行环境会从栈中抛出并销毁。</p>
-<h2 id="3-VO和AO的区别"><a href="#3-VO和AO的区别" class="headerlink" title="3 VO和AO的区别"></a>3 VO和AO的区别</h2><p>① 非函数执行环境对应创建一个VO对象；<br>② 函数执行环境对应创建一个默认带有arguments属性的AO对象；<br>③ AO是函数执行环境下的VO，两者的作用是相同的。</p>
-]]></content>
-      <tags>
-        <tag>JS</tag>
       </tags>
   </entry>
   <entry>
