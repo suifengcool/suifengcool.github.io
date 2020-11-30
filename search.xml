@@ -167,44 +167,6 @@
       </tags>
   </entry>
   <entry>
-    <title>css使用技巧（1）-元素居中</title>
-    <url>/2018/02/08/css%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7%EF%BC%881%EF%BC%89-%E5%85%83%E7%B4%A0%E5%B1%85%E4%B8%AD/</url>
-    <content><![CDATA[<p>css元素居中是个永恒的话题，随着前端技术的进一步发展，实现方式也是愈来愈多，这里讲几个实用且高效的方式：</p>
-<h3 id="1、-水平居中"><a href="#1、-水平居中" class="headerlink" title="1、 水平居中"></a>1、 水平居中</h3><ul>
-<li><p>1、 行内（内联）元素： text-align: center;</p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.parent&#123;</span><br><span class="line">	text-align: center;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<a id="more"></a>
-<ul>
-<li><p>2、 块级元素：margin: xpx auto; （子元素需设置宽度）</p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.child&#123;</span><br><span class="line">	width: 200px;</span><br><span class="line">	margin: 0 auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p>3、 flex布局： 子元素为内联元素</p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		display: flex;</span><br><span class="line">		justify-content: center;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	```	</span><br><span class="line">	</span><br><span class="line">* 4、 flex布局： 子元素为块级元素（子元素无需设置宽度）</span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		display: flex;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.child&#123;</span><br><span class="line">		margin: 10px auto;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	```		</span><br><span class="line">	</span><br><span class="line"><span class="comment">### 2、 垂直居中</span></span><br><span class="line">	</span><br><span class="line">* 1、 行内（内联）元素： height = line-height</span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		height: 200px;</span><br><span class="line">		line-height: 200px;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p>2、 块级元素: 绝对定位（子元素尺寸需确定, margin负值实现位移）    </p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">.parent&#123;</span><br><span class="line">	position: relative;</span><br><span class="line">	height: 300px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.child&#123;</span><br><span class="line">	width: 50px;</span><br><span class="line">	height: 40px;</span><br><span class="line">	position: absolute;</span><br><span class="line">	left: 50%;</span><br><span class="line">	right: 50%;</span><br><span class="line">	margin-top: -20px;</span><br><span class="line">	margin-right: -25px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>3、 块级元素: 绝对定位（子元素尺寸需确定, margin: auto）    </p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		position: relative;</span><br><span class="line">		height: 300px;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.child&#123;</span><br><span class="line">		width: 50px;</span><br><span class="line">		height: 50px;</span><br><span class="line">		position: absolute;</span><br><span class="line">		top: 0;</span><br><span class="line">		right: 0;</span><br><span class="line">		bottom: 0;</span><br><span class="line">		left: 0;</span><br><span class="line">		margin: auto;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	```		</span><br><span class="line">	</span><br><span class="line">* 4、 块级元素: 绝对定位（子元素尺寸无需确定, transform位移）	</span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		position: relative;</span><br><span class="line">		height: 300px;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.child&#123;</span><br><span class="line">		position: absolute;</span><br><span class="line">		left: 50%;</span><br><span class="line">		right: 50%;</span><br><span class="line">		transform: translate(-50%,-50%);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p>5、 flex布局，子元素为块级元素，父元素display: flex; 子元素margin: auto;</p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		display: flex;</span><br><span class="line">		width: 500px;</span><br><span class="line">		height: 500px;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.child&#123;</span><br><span class="line">		margin: auto 10px;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	```	</span><br><span class="line">	</span><br><span class="line">* 6、 flex布局, 子元素为内联元素，父级元素display: flex; </span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		display: flex;</span><br><span class="line">		width: 500px;</span><br><span class="line">		height: 500px;</span><br><span class="line">		align-items: center;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>css</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>git 常用操作</title>
     <url>/2017/12/13/git-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</url>
     <content><![CDATA[<h3 id="一、提交代码"><a href="#一、提交代码" class="headerlink" title="一、提交代码"></a>一、提交代码</h3><h5 id="查看当前目录下更改的文件"><a href="#查看当前目录下更改的文件" class="headerlink" title="查看当前目录下更改的文件"></a>查看当前目录下更改的文件</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
@@ -258,6 +220,44 @@
       </tags>
   </entry>
   <entry>
+    <title>css使用技巧（1）-元素居中</title>
+    <url>/2018/02/08/css%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7%EF%BC%881%EF%BC%89-%E5%85%83%E7%B4%A0%E5%B1%85%E4%B8%AD/</url>
+    <content><![CDATA[<p>css元素居中是个永恒的话题，随着前端技术的进一步发展，实现方式也是愈来愈多，这里讲几个实用且高效的方式：</p>
+<h3 id="1、-水平居中"><a href="#1、-水平居中" class="headerlink" title="1、 水平居中"></a>1、 水平居中</h3><ul>
+<li><p>1、 行内（内联）元素： text-align: center;</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.parent&#123;</span><br><span class="line">	text-align: center;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li><p>2、 块级元素：margin: xpx auto; （子元素需设置宽度）</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.child&#123;</span><br><span class="line">	width: 200px;</span><br><span class="line">	margin: 0 auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>3、 flex布局： 子元素为内联元素</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		display: flex;</span><br><span class="line">		justify-content: center;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	```	</span><br><span class="line">	</span><br><span class="line">* 4、 flex布局： 子元素为块级元素（子元素无需设置宽度）</span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		display: flex;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.child&#123;</span><br><span class="line">		margin: 10px auto;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	```		</span><br><span class="line">	</span><br><span class="line"><span class="comment">### 2、 垂直居中</span></span><br><span class="line">	</span><br><span class="line">* 1、 行内（内联）元素： height = line-height</span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		height: 200px;</span><br><span class="line">		line-height: 200px;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>2、 块级元素: 绝对定位（子元素尺寸需确定, margin负值实现位移）    </p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">.parent&#123;</span><br><span class="line">	position: relative;</span><br><span class="line">	height: 300px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.child&#123;</span><br><span class="line">	width: 50px;</span><br><span class="line">	height: 40px;</span><br><span class="line">	position: absolute;</span><br><span class="line">	left: 50%;</span><br><span class="line">	right: 50%;</span><br><span class="line">	margin-top: -20px;</span><br><span class="line">	margin-right: -25px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>3、 块级元素: 绝对定位（子元素尺寸需确定, margin: auto）    </p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		position: relative;</span><br><span class="line">		height: 300px;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.child&#123;</span><br><span class="line">		width: 50px;</span><br><span class="line">		height: 50px;</span><br><span class="line">		position: absolute;</span><br><span class="line">		top: 0;</span><br><span class="line">		right: 0;</span><br><span class="line">		bottom: 0;</span><br><span class="line">		left: 0;</span><br><span class="line">		margin: auto;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	```		</span><br><span class="line">	</span><br><span class="line">* 4、 块级元素: 绝对定位（子元素尺寸无需确定, transform位移）	</span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		position: relative;</span><br><span class="line">		height: 300px;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.child&#123;</span><br><span class="line">		position: absolute;</span><br><span class="line">		left: 50%;</span><br><span class="line">		right: 50%;</span><br><span class="line">		transform: translate(-50%,-50%);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>5、 flex布局，子元素为块级元素，父元素display: flex; 子元素margin: auto;</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		display: flex;</span><br><span class="line">		width: 500px;</span><br><span class="line">		height: 500px;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	.child&#123;</span><br><span class="line">		margin: auto 10px;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	```	</span><br><span class="line">	</span><br><span class="line">* 6、 flex布局, 子元素为内联元素，父级元素display: flex; </span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">	</span><br><span class="line">	.parent&#123;</span><br><span class="line">		display: flex;</span><br><span class="line">		width: 500px;</span><br><span class="line">		height: 500px;</span><br><span class="line">		align-items: center;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>css</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hexo</title>
     <url>/2017/12/21/hexo/</url>
     <content><![CDATA[<h5 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"xxxx"</span></span><br></pre></td></tr></table></figure>
@@ -270,58 +270,6 @@
 <h5 id="Local-debugging"><a href="#Local-debugging" class="headerlink" title="Local debugging"></a>Local debugging</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo s -debug</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
         <tag>开发工具</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>js数组方法使用小结</title>
-    <url>/2017/12/20/js%E6%95%B0%E7%BB%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</url>
-    <content><![CDATA[<h5 id="1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"><a href="#1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组" class="headerlink" title="1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"></a>1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>有返回值，返回依条件返回的数组</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr1 = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">const arr2 = arr1.filter((item)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item.name === <span class="string">'xugang'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">arr2   // arr2 = [&#123;name:<span class="string">'xugang'</span>,age:28&#125;]</span><br><span class="line"></span><br><span class="line">以上可以简写为：</span><br><span class="line">const arr2 = arr1.filter(item=&gt;item.name === <span class="string">'xugang'</span>);</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h5 id="2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"><a href="#2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。" class="headerlink" title="2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"></a>2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>会更改原数组</li>
-<li>有返回值，返回新的数组</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	animal: <span class="string">'dag'</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">	animal: <span class="string">'cat'</span></span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">arr.map((item,index)=&gt;&#123;</span><br><span class="line">	item.color = <span class="string">'red'</span></span><br><span class="line">&#125;)</span><br><span class="line">arr   // arr = [&#123;animal: <span class="string">'dag'</span>,color: <span class="string">'red'</span>&#125;,&#123;animal: <span class="string">'cat'</span>,color: <span class="string">'red'</span>&#125;]</span><br></pre></td></tr></table></figure>
-<h5 id="3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"><a href="#3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。" class="headerlink" title="3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"></a>3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>有返回值: true or false</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 10</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &gt; 3</span><br><span class="line">&#125;)</span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h5 id="4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"><a href="#4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。" class="headerlink" title="4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"></a>4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>有返回值: true or false</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 2</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 1</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h5 id="4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。"><a href="#4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。" class="headerlink" title="4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。"></a>4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>没有返回值</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"><span class="built_in">let</span> arr1 = [];</span><br><span class="line">arr.forEach((item,index)=&gt;&#123;</span><br><span class="line">	<span class="keyword">if</span>(item.name === <span class="string">'wangran'</span>)&#123;</span><br><span class="line">		arr1.push(item.age)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">arr1   // [27]</span><br></pre></td></tr></table></figure>
-<h5 id="5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"><a href="#5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。" class="headerlink" title="5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"></a>5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。</h5><ul>
-<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
-<li>不会更改原数组</li>
-<li>有返回值</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
-<h5 id="6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"><a href="#6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。" class="headerlink" title="6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"></a>6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。</h5><ul>
-<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
-<li>会更改原数组</li>
-<li>有返回值，始终都会返回一个数组，该数组中包含从原始数组中删除的项，如果没有删除任何项，则返回一个空数组</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>JS</tag>
-        <tag>数组</tag>
       </tags>
   </entry>
   <entry>
@@ -461,6 +409,58 @@
 ]]></content>
       <tags>
         <tag>开发工具</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>js数组方法使用小结</title>
+    <url>/2017/12/20/js%E6%95%B0%E7%BB%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</url>
+    <content><![CDATA[<h5 id="1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"><a href="#1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组" class="headerlink" title="1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"></a>1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>有返回值，返回依条件返回的数组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr1 = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">const arr2 = arr1.filter((item)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item.name === <span class="string">'xugang'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">arr2   // arr2 = [&#123;name:<span class="string">'xugang'</span>,age:28&#125;]</span><br><span class="line"></span><br><span class="line">以上可以简写为：</span><br><span class="line">const arr2 = arr1.filter(item=&gt;item.name === <span class="string">'xugang'</span>);</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h5 id="2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"><a href="#2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。" class="headerlink" title="2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"></a>2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>会更改原数组</li>
+<li>有返回值，返回新的数组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	animal: <span class="string">'dag'</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">	animal: <span class="string">'cat'</span></span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">arr.map((item,index)=&gt;&#123;</span><br><span class="line">	item.color = <span class="string">'red'</span></span><br><span class="line">&#125;)</span><br><span class="line">arr   // arr = [&#123;animal: <span class="string">'dag'</span>,color: <span class="string">'red'</span>&#125;,&#123;animal: <span class="string">'cat'</span>,color: <span class="string">'red'</span>&#125;]</span><br></pre></td></tr></table></figure>
+<h5 id="3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"><a href="#3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。" class="headerlink" title="3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"></a>3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>有返回值: true or false</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 10</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &gt; 3</span><br><span class="line">&#125;)</span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h5 id="4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"><a href="#4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。" class="headerlink" title="4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"></a>4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>有返回值: true or false</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 2</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 1</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h5 id="4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。"><a href="#4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。" class="headerlink" title="4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。"></a>4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>没有返回值</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"><span class="built_in">let</span> arr1 = [];</span><br><span class="line">arr.forEach((item,index)=&gt;&#123;</span><br><span class="line">	<span class="keyword">if</span>(item.name === <span class="string">'wangran'</span>)&#123;</span><br><span class="line">		arr1.push(item.age)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">arr1   // [27]</span><br></pre></td></tr></table></figure>
+<h5 id="5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"><a href="#5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。" class="headerlink" title="5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"></a>5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。</h5><ul>
+<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
+<li>不会更改原数组</li>
+<li>有返回值</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
+<h5 id="6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"><a href="#6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。" class="headerlink" title="6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"></a>6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。</h5><ul>
+<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
+<li>会更改原数组</li>
+<li>有返回值，始终都会返回一个数组，该数组中包含从原始数组中删除的项，如果没有删除任何项，则返回一个空数组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>JS</tag>
+        <tag>数组</tag>
       </tags>
   </entry>
   <entry>
