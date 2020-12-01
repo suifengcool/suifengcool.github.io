@@ -118,6 +118,9 @@
   <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Object.prototype.toString.call(1)    // &quot;[object Number]&quot;</span><br><span class="line">Object.prototype.toString.call(&apos;1&apos;)  // &quot;[object String]&quot;</span><br><span class="line">Object.prototype.toString.call(null) // &quot;[object Null]&quot;</span><br><span class="line">Object.prototype.toString.call(&#123;&#125;)   // &quot;[object Object]&quot;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>综上所述，JS检测数据，最优方法如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/*</span><br><span class="line"> * @desc   数据类型检测</span><br><span class="line"> * @params val &#123; any &#125; 待检测的数据</span><br><span class="line"> * @return &#123; String &#125; 类型字符串 </span><br><span class="line"> */</span><br><span class="line">function type(val) &#123;     </span><br><span class="line">	return typeof val !== &quot;object&quot; </span><br><span class="line">		? typeof val </span><br><span class="line">		: Object.prototype.toString.call(val).slice(8, -1).toLowerCase(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 ]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
       <tags>
         <tag>JS</tag>
       </tags>
@@ -156,43 +159,15 @@
 <h3 id="活动对象（Activation-Object，简称AO）"><a href="#活动对象（Activation-Object，简称AO）" class="headerlink" title="活动对象（Activation Object，简称AO）"></a>活动对象（Activation Object，简称AO）</h3><p>当进入到一个执行上下文后，这个变量对象才会被激活，所以叫活动对象(AO)，这时候活动对象上的各种属性才能被访问。</p>
 <p>函数的执行环境是在调用时创建的，在创建函数执行环境的同时会对应创建一个带有arguments属性的AO对象，该对象将代替VO对象来保存当前函数环境中的变量、参数和函数，所以在函数执行环境中VO就是AO。</p>
 <h3 id="VO和AO的区别"><a href="#VO和AO的区别" class="headerlink" title="VO和AO的区别"></a>VO和AO的区别</h3><p>① 非函数执行环境对应创建一个VO对象；<br>② 函数执行环境对应创建一个默认带有arguments属性的AO对象；<br>③ AO是函数执行环境下的VO，两者的作用是相同的。</p>
-<h2 id="作用域-和-作用域链"><a href="#作用域-和-作用域链" class="headerlink" title="作用域 和 作用域链"></a>作用域 和 作用域链</h2><h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p><strong>作用域</strong>就是变量和函数的可访问范围。</p>
-<ul>
-<li><strong>全局作用域</strong>，在代码中任何地方都能访问到的对象拥有全局作用域<br>  ① window 对象的内置属性都拥有全局作用域；<br>  ② 定义在最外层的函数和变量拥有全局作用域；<br>  ③ 所有未定义但直接赋值的变量也拥有全局作用域。</li>
-<li><strong>局部作用域</strong>，和全局作用域相反，局部作用域一般只在固定的代码片段内可访问到，最常见的例如函数内部，所以也称为函数作用域</li>
-<li><p><strong>块级作用域</strong>，意思是由花括号封闭的代码块有自己的作用域</p>
-<ul>
-<li><p><strong>没有块级作用域</strong>，es6之前，js没有块级作用域，由此会产生问题：<strong>在if或者for循环中声明的变量会泄露成全局变量</strong></p>
-<p>代码理解如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 例子1：</span><br><span class="line">if(true) &#123;</span><br><span class="line">  var color = &apos;blue&apos;;</span><br><span class="line">&#125;</span><br><span class="line">console.log(color)</span><br><span class="line">// 在if语句中声明的变量，会被添加至if语句当前的执行环境中（此时为全局作用域）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 例子2：</span><br><span class="line">for(var i=0;i &lt; 10; i ++)&#123;</span><br><span class="line">  // doSomeThing(i)</span><br><span class="line">&#125;</span><br><span class="line">console.log(&apos;i:&apos;, i)</span><br><span class="line">// 结果会返回10，对于有块级作用域的语言来说，for语句内定义的变量，只会存在于循环体内，而es6之前，js没有块级作用域，由for语句定义的变量i，即使for循环结束后，也依旧存在于for语句所在的执行环境中。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 例子3：</span><br><span class="line">var temp = &apos;green&apos;;</span><br><span class="line">function foo() &#123;</span><br><span class="line">  console.log(temp);</span><br><span class="line">  if(false) &#123;</span><br><span class="line">    var temp = &apos;blue&apos;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line">// 结果打印为&apos;undefined&apos;。</span><br><span class="line">// 虽然按照我们常规理解，由于if语句内部代码并不会被执行，在foo函数作用域内，没有temp变量的值， 此时向上查找到全局作用域确定temp变量的值为green。但是由于js没有块级作用域，if语句中声明的变量，会被添加至if语句所在的执行环境中，所以在变量提升的前提下，此时temp值为 &apos;undefined&apos;。</span><br></pre></td></tr></table></figure>
-<p><strong>注意：if语句如果不满足条件，if语句内部代码块不会被执行，但是内部声明的变量（不包括函数）仍然会被添加至if语句所在的执行环境中，此时该变量的值初始化为undefined</strong></p>
-</li>
-<li><p><strong>模仿块级作用域</strong>，ES6以前变量的作用域是函数范围，有时在函数内局部需要一些临时变量，因为没有块级作用域，所以就会将局部代码封装到IIEF（立即执行函数）中。</p>
-  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 立即执行函数</span><br><span class="line">(function()&#123;</span><br><span class="line">  var temp = &quot;hello world&quot;;</span><br><span class="line">&#125;());</span><br><span class="line"></span><br><span class="line">// 块级作用域</span><br><span class="line">&#123;</span><br><span class="line">  var temp = &quot;hello world&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>es6块级块级作用域</strong>， 用let命令新增了块级作用域，外层作用域无法获取到内层作用域</p>
-<ul>
-<li><p>外层作用域无法获取到内层作用域， 比如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 例子1</span><br><span class="line">function fn1() &#123;</span><br><span class="line">  var a = 41;</span><br><span class="line">  if(1 == 1) &#123;</span><br><span class="line">    var a = 3;</span><br><span class="line">    console.log(2,a); // 2 3</span><br><span class="line">  &#125;</span><br><span class="line">  console.log(1,a); // 1 3</span><br><span class="line">&#125;</span><br><span class="line">fn1();</span><br><span class="line">// 打印结果为：2 3 和 1 3</span><br><span class="line"></span><br><span class="line">// 例子2</span><br><span class="line">function fn2() &#123;</span><br><span class="line">  let a = 41;</span><br><span class="line">  if(1 == 1) &#123;</span><br><span class="line">    let a = 3;</span><br><span class="line">    console.log(2,a); // 2 3</span><br><span class="line">  &#125;</span><br><span class="line">  console.log(1,a); // 1 41</span><br><span class="line">&#125;</span><br><span class="line">fn2();</span><br><span class="line">// 打印结果为：2 3 和 1 41</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>外层和内层都使用相同变量名，也都互不干扰，比如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;  </span><br><span class="line">  &#123;</span><br><span class="line">    let name = &apos;xug&apos;;</span><br><span class="line">    console.log(name); // xug</span><br><span class="line">&#125;</span><br><span class="line">let name = &apos;suifeng&apos;;</span><br><span class="line">  console.log(name); // suifeng</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<pre><code>明白了块级作用域，模仿块级作用域，咱们再来道老生常谈的旧菜测试一下：如何在for循环中，依次打印出 0,1,2 ?
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 方式①  使用自执行匿名函数，模仿块级作用域</span><br><span class="line">for (var i=0; i &lt; 3; i ++) &#123;</span><br><span class="line">  (function (a) &#123;</span><br><span class="line">    console.log(a)</span><br><span class="line">  &#125;)(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 方式② 使用es6 let，自带块级作用域</span><br><span class="line">for (let i=0; i &lt; 3; i ++) &#123;</span><br><span class="line">  console.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</code></pre><h3 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h3><p>在确定一个变量的值时，首先会从当前所在的局部作用域内查找，如果找到则停止，否则就会在上级作用域内查找，直到全局作用域。这个逐级向上查找形成的链条，就称之为作用域链。</p>
-<p>来道小菜，测试一下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var scope = &quot;global&quot;;</span><br><span class="line">function foo()&#123;</span><br><span class="line">    console.log(scope);</span><br><span class="line">    var scope = &quot;local&quot;;</span><br><span class="line">    console.log(scope);</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line"></span><br><span class="line">// 打印结果为：&apos;undefined&apos;, &apos;local&apos;</span><br><span class="line">// 在函数foo内部，由于存在变量提升，scope首先会被赋值为&apos;undefined&apos;，也就是说在函数作用域内已经找到scope变量的值，查找结束，所以第一个打印为&apos;undefined&apos;。接着，进行变量重新赋值，所以第二个打印为&apos;local&apos;。当然了，这道题的考点主要在变量提升，咱们接着聊。</span><br></pre></td></tr></table></figure></p>
 <h2 id="函数声明，变量声明，函数表达式的优先级"><a href="#函数声明，变量声明，函数表达式的优先级" class="headerlink" title="函数声明，变量声明，函数表达式的优先级"></a>函数声明，变量声明，函数表达式的优先级</h2><ul>
 <li>函数声明，如果有同名属性，后面会替换前面</li>
 <li>函数声明优先级高于变量声明</li>
 <li>函数表达式不会有变量提升</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
       <tags>
         <tag>JS</tag>
       </tags>
@@ -511,6 +486,63 @@
     <content><![CDATA[]]></content>
   </entry>
   <entry>
+    <title>作用域&amp;作用域链</title>
+    <url>/2020/12/01/%E4%BD%9C%E7%94%A8%E5%9F%9F-%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/</url>
+    <content><![CDATA[<blockquote>
+<p>一步一步重温 <strong>JavaScript</strong> 基础系列。<br>本章节将会理解JS的作用域、作用域链以及延长作用域链。</p>
+</blockquote>
+<h2 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h2><p><strong>作用域</strong>就是变量和函数的可访问范围。</p>
+<a id="more"></a>
+<h3 id="全局作用域"><a href="#全局作用域" class="headerlink" title="全局作用域"></a>全局作用域</h3><p>在代码中任何地方都能访问到的对象拥有全局作用域</p>
+<ul>
+<li>window 对象的内置属性都拥有全局作用域；</li>
+<li>定义在最外层的函数和变量拥有全局作用域；</li>
+<li>所有未定义但直接赋值的变量也拥有全局作用域。</li>
+</ul>
+<h3 id="局部作用域"><a href="#局部作用域" class="headerlink" title="局部作用域"></a>局部作用域</h3><p>和全局作用域相反，局部作用域一般只在固定的代码片段内可访问到，最常见的例如函数内部，所以也称为函数作用域</p>
+<h3 id="块级作用域"><a href="#块级作用域" class="headerlink" title="块级作用域"></a>块级作用域</h3><p>意思是由花括号封闭的代码块有自己的作用域</p>
+<ul>
+<li><p><strong>没有块级作用域</strong>，es6之前，js没有块级作用域，由此会产生问题:<strong>在if或者for循环中声明的变量会泄露成全局变量</strong></p>
+<p>  代码理解如下：</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 例子1：</span><br><span class="line">if(true) &#123;</span><br><span class="line">  var color = &apos;blue&apos;;</span><br><span class="line">&#125;</span><br><span class="line">console.log(color)</span><br><span class="line">// 在if语句中声明的变量，会被添加至if语句当前的执行环境中（此时为全局作用域）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 例子2：</span><br><span class="line">for(var i=0;i &lt; 10; i ++)&#123;</span><br><span class="line">  // doSomeThing(i)</span><br><span class="line">&#125;</span><br><span class="line">console.log(&apos;i:&apos;, i)</span><br><span class="line">// 结果会返回10，对于有块级作用域的语言来说，for语句内定义的变量，只会存在于循环体内，</span><br><span class="line">   // 而es6之前，js没有块级作用域，由for语句定义的变量i，即使for循环结束后，也依旧存在于for语句所在的执行环境中。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 例子3：</span><br><span class="line">var temp = &apos;green&apos;;</span><br><span class="line">function foo() &#123;</span><br><span class="line">  console.log(temp);</span><br><span class="line">  if(false) &#123;</span><br><span class="line">    var temp = &apos;blue&apos;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line">// 结果打印为&apos;undefined&apos;。</span><br><span class="line"></span><br><span class="line">// 虽然按照我们常规理解，由于if语句内部代码并不会被执行，在foo函数作用域内，没有temp变量的值， </span><br><span class="line">   // 此时向上查找到全局作用域确定temp变量的值为green。</span><br><span class="line">   // 但是由于js没有块级作用域，if语句中声明的变量，会被添加至if语句所在的执行环境中，</span><br><span class="line">   // 所以在变量提升的前提下，此时temp值为 &apos;undefined&apos;。</span><br></pre></td></tr></table></figure>
+<p>  <strong>注意：if语句如果不满足条件，if语句内部代码块不会被执行，但是内部声明的变量（不包括函数）仍然会被添加至if语句所在的执行环境中，此时该变量的值初始化为undefined</strong></p>
+</li>
+<li><p><strong>模仿块级作用域</strong>，ES6以前变量的作用域是函数范围，有时在函数内局部需要一些临时变量，因为没有块级作用域，所以就会将局部代码封装到IIEF（立即执行函数）中。</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 立即执行函数</span><br><span class="line">(function()&#123;</span><br><span class="line">  var temp = &quot;hello world&quot;;</span><br><span class="line">&#125;());</span><br><span class="line"></span><br><span class="line">// 块级作用域</span><br><span class="line">&#123;</span><br><span class="line">  var temp = &quot;hello world&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>es6块级块级作用域</strong>， 用let命令新增了块级作用域，外层作用域无法获取到内层作用域</p>
+<ul>
+<li><p>外层作用域无法获取到内层作用域， 比如：</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 例子1</span><br><span class="line">function fn1() &#123;</span><br><span class="line">  var a = 41;</span><br><span class="line">  if(1 == 1) &#123;</span><br><span class="line">    var a = 3;</span><br><span class="line">    console.log(2,a); // 2 3</span><br><span class="line">  &#125;</span><br><span class="line">  console.log(1,a); // 1 3</span><br><span class="line">&#125;</span><br><span class="line">fn1();</span><br><span class="line">// 打印结果为：2 3 和 1 3</span><br><span class="line"></span><br><span class="line">// 例子2</span><br><span class="line">function fn2() &#123;</span><br><span class="line">  let a = 41;</span><br><span class="line">  if(1 == 1) &#123;</span><br><span class="line">    let a = 3;</span><br><span class="line">    console.log(2,a); // 2 3</span><br><span class="line">  &#125;</span><br><span class="line">  console.log(1,a); // 1 41</span><br><span class="line">&#125;</span><br><span class="line">fn2();</span><br><span class="line">// 打印结果为：2 3 和 1 41</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>外层和内层都使用相同变量名，也都互不干扰，比如：</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;  </span><br><span class="line">  &#123;</span><br><span class="line">    let name = &apos;xug&apos;;</span><br><span class="line">    console.log(name); // xug</span><br><span class="line">  &#125;</span><br><span class="line">  let name = &apos;suifeng&apos;;</span><br><span class="line">  console.log(name); // suifeng</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p>明白了块级作用域，模仿块级作用域，咱们再来道老生常谈的旧菜测试一下：<strong>如何在for循环中，依次打印出 0,1,2 ?</strong><br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 方式①  使用自执行匿名函数，模仿块级作用域</span><br><span class="line">for (var i=0; i &lt; 3; i ++) &#123;</span><br><span class="line">  (function (a) &#123;</span><br><span class="line">    console.log(a)</span><br><span class="line">  &#125;)(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 方式② 使用es6 let，自带块级作用域</span><br><span class="line">for (let i=0; i &lt; 3; i ++) &#123;</span><br><span class="line">  console.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><p>在确定一个变量的值时，首先会从当前所在的局部作用域内查找，如果找到则停止，否则就会在上级作用域内查找，直到全局作用域。这个逐级向上查找形成的链条，就称之为<strong>作用域链</strong>。</p>
+<p>来道小菜，测试一下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var scope = &quot;global&quot;;</span><br><span class="line">function foo()&#123;</span><br><span class="line">    console.log(scope);</span><br><span class="line">    var scope = &quot;local&quot;;</span><br><span class="line">    console.log(scope);</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line"></span><br><span class="line">// 打印结果为：&apos;undefined&apos;, &apos;local&apos;</span><br><span class="line"></span><br><span class="line">// 在函数foo内部，由于存在变量提升，scope首先会被赋值为&apos;undefined&apos;，</span><br><span class="line">// 也就是说在函数作用域内已经找到scope变量的值，查找结束，所以第一个打印为&apos;undefined&apos;。</span><br><span class="line">// 接着，进行变量重新赋值，所以第二个打印为&apos;local&apos;。当然了，这道题的考点主要在变量提升，咱们接着聊。</span><br></pre></td></tr></table></figure></p>
+<h2 id="延长作用域链"><a href="#延长作用域链" class="headerlink" title="延长作用域链"></a>延长作用域链</h2><p>虽然执行环境只有全局执行环境和局部执行环境，但是有些语句可以<strong>接收一个对象，也就是在当前作用域的最前端临时增加一个变量对象，从而起到了延长作用域链的作用</strong></p>
+<ul>
+<li><p>try-catch 语句中的catch块<br>catch语句，会创建一个新的变量对象，其中包含的是被抛出来的错误对象的声明</p>
+</li>
+<li><p>with语句<br>with语句，会将指定的对象添加到作用域链最前端</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function buildUrl () &#123;</span><br><span class="line">  var qs = &apos;?debug=true&apos;;</span><br><span class="line"></span><br><span class="line">  with (location) &#123;</span><br><span class="line">    var url = href + qs;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return url;</span><br><span class="line">&#125;</span><br><span class="line">buildUrl();</span><br></pre></td></tr></table></figure>
+<p>在这里，with语句接收一个location对象，因此其变量对象就包含了location对象的所有属性和方法，而这个变量对象被添加至作用域链的前端。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
+      <tags>
+        <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用hexo + github + Yilia搭建个人博客</title>
     <url>/2017/12/22/%E4%BD%BF%E7%94%A8hexo-github-Yilia%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
     <content><![CDATA[<blockquote>
@@ -589,6 +621,52 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function setName(obj) &#123;</span><br><span class="line">  obj.name = &apos;xugang&apos;;</span><br><span class="line">  </span><br><span class="line">  // 改变局部变量（形参）的引用地址，指向堆内存中的一个新对象</span><br><span class="line">  obj = new Object();</span><br><span class="line">  obj.name = &apos;suifeng&apos;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var person = new Object();</span><br><span class="line">setName(person);</span><br><span class="line"></span><br><span class="line">console.log(person) // &#123;name: &apos;xugang&apos;&#125;</span><br></pre></td></tr></table></figure>
 <p>图解如下：</p>
 <p><img src="/images/按值传递.jpg" alt="按值传递图解"></p>
+]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
+      <tags>
+        <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>变量声明&amp;函数声明</title>
+    <url>/2020/12/01/%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E-%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E/</url>
+    <content><![CDATA[<blockquote>
+<p>一步一步重温 <strong>JavaScript</strong> 基础系列。<br>本章节将会理解JS的变量和函数的声明方式和异同，以及其优先级</p>
+</blockquote>
+<h2 id="定义变量"><a href="#定义变量" class="headerlink" title="定义变量"></a>定义变量</h2><a id="more"></a>
+<h3 id="var"><a href="#var" class="headerlink" title="var"></a>var</h3><p>会直接在栈内存里预分配内存空间，然后等到实际语句执行的时候，再存储对应的变量，如果传的是引用类型，那么会在堆内存里开辟一个内存空间存储实际内容，栈内存会存储一个指向堆内存的指针。</p>
+<ul>
+<li>定义的变量没有赋值时，默认初始化为undefined</li>
+<li>没有块级作用域</li>
+<li>存在变量声明提升</li>
+<li>可以反复声明和赋值</li>
+</ul>
+<h3 id="let"><a href="#let" class="headerlink" title="let"></a>let</h3><p>是不会在栈内存里预分配内存空间，而且在栈内存分配变量时，做一个检查，如果已经有相同变量名存在就会报错。</p>
+<ul>
+<li>有块级作用域，只在声明所在的块级作用域内有效</li>
+<li>没有变量声明提升</li>
+<li>不可重复声明</li>
+</ul>
+<h3 id="const-常量"><a href="#const-常量" class="headerlink" title="const 常量"></a>const 常量</h3><p>声明常量，也不会预分配内存空间，在栈内存分配变量时也会做同样的检查。不过const存储的变量是不可修改的，对于基本类型来说你无法修改定义的值，对于引用类型来说你无法修改栈内存里分配的指针，但是你可以修改指针指向的对象里面的属性。</p>
+<ul>
+<li>有块级作用域，只在声明所在的块级作用域内有效</li>
+<li>没有变量声明提升</li>
+<li>不可重复声明</li>
+<li>声明时必须初始化赋值</li>
+</ul>
+<p>（以上非原创）链接：<a href="https://www.jianshu.com/p/12c186deb6fe" target="_blank" rel="noopener">https://www.jianshu.com/p/12c186deb6fe</a></p>
+<h2 id="定义函数"><a href="#定义函数" class="headerlink" title="定义函数"></a>定义函数</h2><h3 id="函数声明"><a href="#函数声明" class="headerlink" title="函数声明"></a>函数声明</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function foo ()&#123;</span><br><span class="line">  // 函数体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="函数表达式"><a href="#函数表达式" class="headerlink" title="函数表达式"></a>函数表达式</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var foo = function ()&#123;</span><br><span class="line">  // 函数体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以将用函数表达式定义的函数理解为先声明一个变量，然后赋值为一个函数<br><strong>注意：函数声明存在函数声明提升，而函数表达式则没有</strong><br>例如：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 函数声明-存在函数声明提升</span><br><span class="line">sayHi();</span><br><span class="line">function sayHi() &#123;</span><br><span class="line">    alert(&apos;Hi&apos;)</span><br><span class="line">&#125;</span><br><span class="line">// 此时不会报错，因为函数声明提升，即将函数声明方式定义的函数，放在最先进行读取</span><br><span class="line"></span><br><span class="line">// 函数表达式-不存在函数声明提升</span><br><span class="line">sayHi();</span><br><span class="line">var sayHi = function () &#123;</span><br><span class="line">    alert(&apos;Hi&apos;)</span><br><span class="line">&#125;</span><br><span class="line">// 此时会报错，因为变量声明提升，在当前作用域下，先声明一个sayHi，但并未赋值，其值默认为&apos;undefined&apos;</span><br><span class="line">// 一个值为&apos;undefined&apos;的变量，作为函数调用，显然会报错</span><br></pre></td></tr></table></figure></p>
+<h2 id="函数声明和变量声明提升优先级"><a href="#函数声明和变量声明提升优先级" class="headerlink" title="函数声明和变量声明提升优先级"></a>函数声明和变量声明提升优先级</h2><ul>
+<li><p>函数声明优先级高于变量声明，毕竟函数是一等公民</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var getNum = function()&#123;</span><br><span class="line">  console.log(2);</span><br><span class="line">&#125;</span><br><span class="line">function getNum ()&#123;</span><br><span class="line">  console.log(1);</span><br><span class="line">&#125;</span><br><span class="line">getNum();</span><br><span class="line"></span><br><span class="line">// 打印为2</span><br><span class="line">// 代码解释如下：</span><br><span class="line">function getNum ()&#123;</span><br><span class="line">  console.log(1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var getNum;</span><br><span class="line">getNum = function()&#123;</span><br><span class="line">  console.log(2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getNum();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>函数声明，如果有同名属性，后面会替换前面</p>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>JS基础</category>
