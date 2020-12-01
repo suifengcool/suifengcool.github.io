@@ -26,28 +26,6 @@
       </tags>
   </entry>
   <entry>
-    <title>JS 数组去重</title>
-    <url>/2018/02/06/JS-%E6%95%B0%E7%BB%84%E5%8E%BB%E9%87%8D/</url>
-    <content><![CDATA[<ul>
-<li><p>1、 数组元素为基本数据类型</p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">const unique = (arrwy) =&gt; &#123;</span><br><span class="line">       <span class="built_in">let</span> obj = &#123;&#125;, arr = [];</span><br><span class="line">    arrwy.forEach((ele, index) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span>(obj[ele])&#123;</span><br><span class="line">            <span class="built_in">return</span></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            obj[ele] = <span class="string">'1'</span>;</span><br><span class="line">            arr.push(ele)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="built_in">return</span> arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-  <a id="more"></a>
-<p>  原理：new一个空对象和一个空数组，遍历原数组，将原数组每一项作为空对象的新增属性，循环过程中，如果目标对象已经包含该属性，则return，否则给该属性取值为1，并把该属性push进空数组。此空数组即为原数组去重后的数组。</p>
-</li>
-<li><p>2、 数组元素为基本数据类型（es6 Set）</p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[...new Set([1,<span class="string">'1'</span>,<span class="string">'1'</span>,2,1])]</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p>3、 数组元素为对象，且去重标准为其中的某一个属性</p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">	const unique = (arrwy,key) =&gt; &#123;</span><br><span class="line">	    <span class="built_in">let</span> obj = &#123;&#125;, arr = [];</span><br><span class="line">	    arrwy.forEach((ele, index) =&gt; &#123;</span><br><span class="line">	        <span class="keyword">if</span>(obj[ele.key])&#123;</span><br><span class="line">	            <span class="built_in">return</span></span><br><span class="line">	        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	            obj[ele.key] = <span class="string">'1'</span>;</span><br><span class="line">	            arr.push(ele)</span><br><span class="line">	        &#125;</span><br><span class="line">	    &#125;);</span><br><span class="line">	    <span class="built_in">return</span> arr;</span><br><span class="line">	&#125;</span><br><span class="line">	```	</span><br><span class="line">	</span><br><span class="line">	原理：new一个空对象和一个空数组，遍历原数组，将原数组每一项的指定属性的属性值作为空对象的新增属性，循环过程中，如果目标对象已经包含该属性，则<span class="built_in">return</span>，否则给该属性取值为1，并把该属性push进空数组。此空数组即为原数组去重后的数组。</span><br><span class="line">	</span><br><span class="line">* 4、 数组元素为对象，且去重标准为其中的某几个属性</span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">		//将对象元素转换成字符串以作比较  </span><br><span class="line">		<span class="keyword">function</span> obj2key(obj, keys)&#123;  </span><br><span class="line">		    var n = keys.length,  </span><br><span class="line">		        key = [];  </span><br><span class="line">		    <span class="keyword">while</span>(n--)&#123;  </span><br><span class="line">		        key.push(obj[keys[n]]);  </span><br><span class="line">		    &#125;  </span><br><span class="line">		    <span class="built_in">return</span> key.join(<span class="string">'|'</span>);  </span><br><span class="line">		&#125;  </span><br><span class="line">		</span><br><span class="line">		//去重操作  </span><br><span class="line">		<span class="keyword">function</span> uniqeByKeys(array,keys)&#123;  </span><br><span class="line">		    var arr = [];  </span><br><span class="line">		    var <span class="built_in">hash</span> = &#123;&#125;;  </span><br><span class="line">		    <span class="keyword">for</span> (var i = 0, j = array.length; i &lt; j; i++) &#123;  </span><br><span class="line">		        var k = obj2key(array[i], keys);  </span><br><span class="line">		        <span class="keyword">if</span> (!(k <span class="keyword">in</span> <span class="built_in">hash</span>)) &#123;  </span><br><span class="line">		            <span class="built_in">hash</span>[k] = <span class="literal">true</span>;  </span><br><span class="line">		            arr .push(array[i]);  </span><br><span class="line">		        &#125;  </span><br><span class="line">		    &#125;  </span><br><span class="line">		    <span class="built_in">return</span> arr ;  </span><br><span class="line">		&#125; </span><br><span class="line">		</span><br><span class="line">		<span class="built_in">let</span> arr = [&#123;</span><br><span class="line">			name: <span class="string">'aaa'</span>,</span><br><span class="line">			<span class="built_in">type</span>: <span class="string">'shop'</span></span><br><span class="line">		&#125;,&#123;</span><br><span class="line">			name: <span class="string">'bbb'</span>,</span><br><span class="line">			<span class="built_in">type</span>: <span class="string">'msg'</span></span><br><span class="line">		&#125;,&#123;</span><br><span class="line">			name: <span class="string">'bbb'</span>,</span><br><span class="line">			<span class="built_in">type</span>: <span class="string">'msg'</span></span><br><span class="line">		&#125;];</span><br><span class="line">		arr = uniqeByKeys(arr,[<span class="string">'name'</span>,<span class="string">'type'</span>]);</span><br></pre></td></tr></table></figure></li>
-</ul>
-]]></content>
-      <tags>
-        <tag>JS</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JS 数组map()方法到底会不会改变原数组</title>
     <url>/2018/01/22/JS-%E6%95%B0%E7%BB%84map-%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E4%BC%9A%E4%B8%8D%E4%BC%9A%E6%94%B9%E5%8F%98%E5%8E%9F%E6%95%B0%E7%BB%84/</url>
     <content><![CDATA[<p>　　之前写过关于js数组map()的一篇文章，当时的结论是map()会改变原数组，后来仔细想了一下，其实这个结论很不严谨。那到底结论如何呢，先不慌，看以下两个示例：<br>　　<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr1 = [<span class="string">'xugang'</span>,<span class="string">'wangran'</span>]</span><br><span class="line">arr1.map((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item += <span class="string">'good'</span></span><br><span class="line">&#125;)</span><br><span class="line">arr1 //arr1 = [<span class="string">'xugang'</span>,<span class="string">'wangran'</span>]</span><br></pre></td></tr></table></figure></p>
@@ -123,6 +101,28 @@
       </tags>
   </entry>
   <entry>
+    <title>JS 数组去重</title>
+    <url>/2018/02/06/JS-%E6%95%B0%E7%BB%84%E5%8E%BB%E9%87%8D/</url>
+    <content><![CDATA[<ul>
+<li><p>1、 数组元素为基本数据类型</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">const unique = (arrwy) =&gt; &#123;</span><br><span class="line">       <span class="built_in">let</span> obj = &#123;&#125;, arr = [];</span><br><span class="line">    arrwy.forEach((ele, index) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span>(obj[ele])&#123;</span><br><span class="line">            <span class="built_in">return</span></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            obj[ele] = <span class="string">'1'</span>;</span><br><span class="line">            arr.push(ele)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="built_in">return</span> arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <a id="more"></a>
+<p>  原理：new一个空对象和一个空数组，遍历原数组，将原数组每一项作为空对象的新增属性，循环过程中，如果目标对象已经包含该属性，则return，否则给该属性取值为1，并把该属性push进空数组。此空数组即为原数组去重后的数组。</p>
+</li>
+<li><p>2、 数组元素为基本数据类型（es6 Set）</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[...new Set([1,<span class="string">'1'</span>,<span class="string">'1'</span>,2,1])]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>3、 数组元素为对象，且去重标准为其中的某一个属性</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">	const unique = (arrwy,key) =&gt; &#123;</span><br><span class="line">	    <span class="built_in">let</span> obj = &#123;&#125;, arr = [];</span><br><span class="line">	    arrwy.forEach((ele, index) =&gt; &#123;</span><br><span class="line">	        <span class="keyword">if</span>(obj[ele.key])&#123;</span><br><span class="line">	            <span class="built_in">return</span></span><br><span class="line">	        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	            obj[ele.key] = <span class="string">'1'</span>;</span><br><span class="line">	            arr.push(ele)</span><br><span class="line">	        &#125;</span><br><span class="line">	    &#125;);</span><br><span class="line">	    <span class="built_in">return</span> arr;</span><br><span class="line">	&#125;</span><br><span class="line">	```	</span><br><span class="line">	</span><br><span class="line">	原理：new一个空对象和一个空数组，遍历原数组，将原数组每一项的指定属性的属性值作为空对象的新增属性，循环过程中，如果目标对象已经包含该属性，则<span class="built_in">return</span>，否则给该属性取值为1，并把该属性push进空数组。此空数组即为原数组去重后的数组。</span><br><span class="line">	</span><br><span class="line">* 4、 数组元素为对象，且去重标准为其中的某几个属性</span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">		//将对象元素转换成字符串以作比较  </span><br><span class="line">		<span class="keyword">function</span> obj2key(obj, keys)&#123;  </span><br><span class="line">		    var n = keys.length,  </span><br><span class="line">		        key = [];  </span><br><span class="line">		    <span class="keyword">while</span>(n--)&#123;  </span><br><span class="line">		        key.push(obj[keys[n]]);  </span><br><span class="line">		    &#125;  </span><br><span class="line">		    <span class="built_in">return</span> key.join(<span class="string">'|'</span>);  </span><br><span class="line">		&#125;  </span><br><span class="line">		</span><br><span class="line">		//去重操作  </span><br><span class="line">		<span class="keyword">function</span> uniqeByKeys(array,keys)&#123;  </span><br><span class="line">		    var arr = [];  </span><br><span class="line">		    var <span class="built_in">hash</span> = &#123;&#125;;  </span><br><span class="line">		    <span class="keyword">for</span> (var i = 0, j = array.length; i &lt; j; i++) &#123;  </span><br><span class="line">		        var k = obj2key(array[i], keys);  </span><br><span class="line">		        <span class="keyword">if</span> (!(k <span class="keyword">in</span> <span class="built_in">hash</span>)) &#123;  </span><br><span class="line">		            <span class="built_in">hash</span>[k] = <span class="literal">true</span>;  </span><br><span class="line">		            arr .push(array[i]);  </span><br><span class="line">		        &#125;  </span><br><span class="line">		    &#125;  </span><br><span class="line">		    <span class="built_in">return</span> arr ;  </span><br><span class="line">		&#125; </span><br><span class="line">		</span><br><span class="line">		<span class="built_in">let</span> arr = [&#123;</span><br><span class="line">			name: <span class="string">'aaa'</span>,</span><br><span class="line">			<span class="built_in">type</span>: <span class="string">'shop'</span></span><br><span class="line">		&#125;,&#123;</span><br><span class="line">			name: <span class="string">'bbb'</span>,</span><br><span class="line">			<span class="built_in">type</span>: <span class="string">'msg'</span></span><br><span class="line">		&#125;,&#123;</span><br><span class="line">			name: <span class="string">'bbb'</span>,</span><br><span class="line">			<span class="built_in">type</span>: <span class="string">'msg'</span></span><br><span class="line">		&#125;];</span><br><span class="line">		arr = uniqeByKeys(arr,[<span class="string">'name'</span>,<span class="string">'type'</span>]);</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>css使用技巧（1）-元素居中</title>
     <url>/2018/02/08/css%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7%EF%BC%881%EF%BC%89-%E5%85%83%E7%B4%A0%E5%B1%85%E4%B8%AD/</url>
     <content><![CDATA[<p>css元素居中是个永恒的话题，随着前端技术的进一步发展，实现方式也是愈来愈多，这里讲几个实用且高效的方式：</p>
@@ -161,7 +161,7 @@
       </tags>
   </entry>
   <entry>
-    <title>Javascript执行环境</title>
+    <title>Javascript执行环境及作用域</title>
     <url>/2020/11/25/Javascript%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83/</url>
     <content><![CDATA[<blockquote>
 <p>一步一步重温 <strong>JavaScript</strong> 基础系列。<br>本章节将会理解JS的执行环境即执行上下文相关概念，包括变量对象、活动对象、以及两者区别</p>
@@ -171,7 +171,7 @@
 <p>每个执行环境都有三个重要的属性：变量对象（VO）、作用域链（scope chain）以及 this。</p>
 <p><img src="/images/执行环境01.jpg" alt="按值传递图解"><br>注：对于VO来说，函数表达式不包含在VO中，没有使用var声明的变量也不包含在VO中，这种方式只是给Global添加了一个属性。</p>
 <h2 id="执行上下文类型"><a href="#执行上下文类型" class="headerlink" title="执行上下文类型"></a>执行上下文类型</h2><ul>
-<li><strong>全局执行上下文</strong>，还有一个，在浏览器中，通常为windows对象，所有的全局变量和函数都作为window对象的属性和方法存在。对于全局执行环境来说，当关闭网页或浏览器时，该环境被销毁；</li>
+<li><strong>全局执行上下文</strong>，只有一个，在浏览器中，通常为windows对象，所有的全局变量和函数都作为window对象的属性和方法存在。对于全局执行环境来说，当关闭网页或浏览器时，该环境被销毁；</li>
 <li><strong>局部（函数）执行上下文</strong> ，每个函数都有自己的执行环境，当js执行流进入一个函数时，函数的环境会被推入一个环境栈中，当函数执行完毕后，栈将其环境弹出，该环境随即被销毁；</li>
 <li><strong>Eval上下文</strong>，运行在 eval 函数中的代码，由于eval 的性能低、不易调试且有安全问题，一般禁止使用。 </li>
 </ul>
@@ -194,6 +194,22 @@
 <h3 id="活动对象（Activation-Object，简称AO）"><a href="#活动对象（Activation-Object，简称AO）" class="headerlink" title="活动对象（Activation Object，简称AO）"></a>活动对象（Activation Object，简称AO）</h3><p>当进入到一个执行上下文后，这个变量对象才会被激活，所以叫活动对象(AO)，这时候活动对象上的各种属性才能被访问。</p>
 <p>函数的执行环境是在调用时创建的，在创建函数执行环境的同时会对应创建一个带有arguments属性的AO对象，该对象将代替VO对象来保存当前函数环境中的变量、参数和函数，所以在函数执行环境中VO就是AO。</p>
 <h3 id="VO和AO的区别"><a href="#VO和AO的区别" class="headerlink" title="VO和AO的区别"></a>VO和AO的区别</h3><p>① 非函数执行环境对应创建一个VO对象；<br>② 函数执行环境对应创建一个默认带有arguments属性的AO对象；<br>③ AO是函数执行环境下的VO，两者的作用是相同的。</p>
+<h2 id="作用域-和-作用域链"><a href="#作用域-和-作用域链" class="headerlink" title="作用域 和 作用域链"></a>作用域 和 作用域链</h2><h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p><strong>作用域</strong>就是变量和函数的可访问范围。</p>
+<ul>
+<li><strong>全局作用域</strong>，在代码中任何地方都能访问到的对象拥有全局作用域<br>  ① window 对象的内置属性都拥有全局作用域；<br>  ② 定义在最外层的函数和变量拥有全局作用域；<br>  ③ 所有未定义但直接赋值的变量也拥有全局作用域。</li>
+<li><strong>局部作用域</strong>，和全局作用域相反，局部作用域一般只在固定的代码片段内可访问到，最常见的例如函数内部，所以也称为函数作用域</li>
+<li><p><strong>块级作用域</strong>，意思是由花括号封闭的代码块有自己的作用域<br>  ① <strong>没有块级作用域</strong>，es6之前，js没有块级作用域，由此会产生问题：<strong>在if或者for循环中声明的变量会泄露成全局变量</strong></p>
+<p>  代码理解如下：</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 例子1：</span><br><span class="line">if(true) &#123;</span><br><span class="line">	var color = &apos;blue&apos;;</span><br><span class="line">&#125;</span><br><span class="line">console.log(color)</span><br><span class="line">// 在if语句中声明的变量，会被添加至if语句当前的执行环境中（此时为全局作用域）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 例子2：</span><br><span class="line">for(var i=0;i &lt; 10; i ++)&#123;</span><br><span class="line">	// doSomeThing(i)</span><br><span class="line">&#125;</span><br><span class="line">console.log(&apos;i:&apos;, i)</span><br><span class="line">// 结果会返回10，对于有块级作用域的语言来说，for语句内定义的变量，只会存在于循环体内，而es6之前，js没有块级作用域，由for语句定义的变量i，即使for循环结束后，也依旧存在于for语句所在的执行环境中。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 例子3：</span><br><span class="line">var temp = &apos;green&apos;;</span><br><span class="line">function foo() &#123;</span><br><span class="line">	console.log(temp);</span><br><span class="line">	if(false) &#123;</span><br><span class="line">		var temp = &apos;blue&apos;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line">// 结果打印为&apos;undefined&apos;。虽然按照我们常规理解，由于if语句并不会被执行，在foo函数作用域内，左右没有temp变量的值， 此时向上查找到全局作用域确定temp变量的值为green。但是由于js没有块级作用域，if语句中声明的变量，会被添加至if语句所在的执行环境中，所以在变量提升的前提下，此时temp值为 &apos;undefined&apos;。</span><br></pre></td></tr></table></figure>
+<p>  ② <strong>es6块级块级作用域</strong></p>
+<p>  ③ <strong>模仿块级作用域</strong>，ES6以前变量的作用域是函数范围，有时在函数内局部需要一些临时变量，因为没有块级作用域，所以就会将局部代码封装到IIEF（立即执行函数）中。</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 立即执行函数</span><br><span class="line">(function()&#123;</span><br><span class="line">  var temp = &quot;hello world&quot;;</span><br><span class="line">&#125;());</span><br><span class="line"></span><br><span class="line">// 块级作用域</span><br><span class="line">&#123;</span><br><span class="line">  var temp = &quot;hello world&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  明白了块级作用域，模仿块级作用域，咱们再来道老生常谈的旧菜测试一下：<strong>如何在for循环中，依次打印出 0,1,2 ?</strong></p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 方式①  使用匿名函数自执行，模仿块级作用域</span><br><span class="line">for (var i=0; i &lt; 3; i ++) &#123;</span><br><span class="line">  (function (a) &#123;</span><br><span class="line">    console.log(a)</span><br><span class="line">  &#125;)(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 方式② 使用es6 let，自带块级作用域</span><br><span class="line">for (let i=0; i &lt; 3; i ++) &#123;</span><br><span class="line">  console.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h3><p>在确定一个变量的值时，首先会从当前所在的局部作用域内查找，如果找到则停止，否则就会在上级作用域内查找，直到全局作用域。这个逐级向上查找形成的链条，就称之为作用域链。</p>
+<p>来道小菜，测试一下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var scope = &quot;global&quot;;</span><br><span class="line">function foo()&#123;</span><br><span class="line">    console.log(scope);</span><br><span class="line">    var scope = &quot;local&quot;;</span><br><span class="line">    console.log(scope);</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line"></span><br><span class="line">// 打印结果为：&apos;undefined&apos;, &apos;local&apos;</span><br><span class="line">// 在函数foo内部，由于存在变量提升，scope首先会被赋值为&apos;undefined&apos;，也就是说在函数作用域内已经找到scope变量的值，查找结束，所以第一个打印为&apos;undefined&apos;。接着，进行变量重新赋值，所以第二个打印为&apos;local&apos;。当然了，这道题的考点主要在变量提升，咱们接着聊。</span><br></pre></td></tr></table></figure></p>
 <h2 id="函数声明，变量声明，函数表达式的优先级"><a href="#函数声明，变量声明，函数表达式的优先级" class="headerlink" title="函数声明，变量声明，函数表达式的优先级"></a>函数声明，变量声明，函数表达式的优先级</h2><ul>
 <li>函数声明，如果有同名属性，后面会替换前面</li>
 <li>函数声明优先级高于变量声明</li>
@@ -316,58 +332,6 @@
       </tags>
   </entry>
   <entry>
-    <title>js数组方法使用小结</title>
-    <url>/2017/12/20/js%E6%95%B0%E7%BB%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</url>
-    <content><![CDATA[<h5 id="1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"><a href="#1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组" class="headerlink" title="1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"></a>1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>有返回值，返回依条件返回的数组</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr1 = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">const arr2 = arr1.filter((item)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item.name === <span class="string">'xugang'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">arr2   // arr2 = [&#123;name:<span class="string">'xugang'</span>,age:28&#125;]</span><br><span class="line"></span><br><span class="line">以上可以简写为：</span><br><span class="line">const arr2 = arr1.filter(item=&gt;item.name === <span class="string">'xugang'</span>);</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h5 id="2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"><a href="#2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。" class="headerlink" title="2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"></a>2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>会更改原数组</li>
-<li>有返回值，返回新的数组</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	animal: <span class="string">'dag'</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">	animal: <span class="string">'cat'</span></span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">arr.map((item,index)=&gt;&#123;</span><br><span class="line">	item.color = <span class="string">'red'</span></span><br><span class="line">&#125;)</span><br><span class="line">arr   // arr = [&#123;animal: <span class="string">'dag'</span>,color: <span class="string">'red'</span>&#125;,&#123;animal: <span class="string">'cat'</span>,color: <span class="string">'red'</span>&#125;]</span><br></pre></td></tr></table></figure>
-<h5 id="3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"><a href="#3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。" class="headerlink" title="3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"></a>3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>有返回值: true or false</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 10</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &gt; 3</span><br><span class="line">&#125;)</span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h5 id="4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"><a href="#4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。" class="headerlink" title="4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"></a>4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>有返回值: true or false</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 2</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 1</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h5 id="4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。"><a href="#4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。" class="headerlink" title="4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。"></a>4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>没有返回值</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"><span class="built_in">let</span> arr1 = [];</span><br><span class="line">arr.forEach((item,index)=&gt;&#123;</span><br><span class="line">	<span class="keyword">if</span>(item.name === <span class="string">'wangran'</span>)&#123;</span><br><span class="line">		arr1.push(item.age)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">arr1   // [27]</span><br></pre></td></tr></table></figure>
-<h5 id="5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"><a href="#5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。" class="headerlink" title="5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"></a>5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。</h5><ul>
-<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
-<li>不会更改原数组</li>
-<li>有返回值</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
-<h5 id="6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"><a href="#6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。" class="headerlink" title="6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"></a>6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。</h5><ul>
-<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
-<li>会更改原数组</li>
-<li>有返回值，始终都会返回一个数组，该数组中包含从原始数组中删除的项，如果没有删除任何项，则返回一个空数组</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>JS</tag>
-        <tag>数组</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>mac下mysql入门</title>
     <url>/2017/12/11/mac%E4%B8%8Bmysql%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[<blockquote>
@@ -461,6 +425,58 @@
 ]]></content>
       <tags>
         <tag>开发工具</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>js数组方法使用小结</title>
+    <url>/2017/12/20/js%E6%95%B0%E7%BB%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</url>
+    <content><![CDATA[<h5 id="1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"><a href="#1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组" class="headerlink" title="1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"></a>1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>有返回值，返回依条件返回的数组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr1 = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">const arr2 = arr1.filter((item)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item.name === <span class="string">'xugang'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">arr2   // arr2 = [&#123;name:<span class="string">'xugang'</span>,age:28&#125;]</span><br><span class="line"></span><br><span class="line">以上可以简写为：</span><br><span class="line">const arr2 = arr1.filter(item=&gt;item.name === <span class="string">'xugang'</span>);</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h5 id="2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"><a href="#2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。" class="headerlink" title="2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"></a>2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>会更改原数组</li>
+<li>有返回值，返回新的数组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	animal: <span class="string">'dag'</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">	animal: <span class="string">'cat'</span></span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">arr.map((item,index)=&gt;&#123;</span><br><span class="line">	item.color = <span class="string">'red'</span></span><br><span class="line">&#125;)</span><br><span class="line">arr   // arr = [&#123;animal: <span class="string">'dag'</span>,color: <span class="string">'red'</span>&#125;,&#123;animal: <span class="string">'cat'</span>,color: <span class="string">'red'</span>&#125;]</span><br></pre></td></tr></table></figure>
+<h5 id="3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"><a href="#3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。" class="headerlink" title="3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"></a>3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>有返回值: true or false</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 10</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &gt; 3</span><br><span class="line">&#125;)</span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h5 id="4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"><a href="#4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。" class="headerlink" title="4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"></a>4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>有返回值: true or false</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 2</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 1</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h5 id="4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。"><a href="#4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。" class="headerlink" title="4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。"></a>4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>没有返回值</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"><span class="built_in">let</span> arr1 = [];</span><br><span class="line">arr.forEach((item,index)=&gt;&#123;</span><br><span class="line">	<span class="keyword">if</span>(item.name === <span class="string">'wangran'</span>)&#123;</span><br><span class="line">		arr1.push(item.age)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">arr1   // [27]</span><br></pre></td></tr></table></figure>
+<h5 id="5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"><a href="#5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。" class="headerlink" title="5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"></a>5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。</h5><ul>
+<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
+<li>不会更改原数组</li>
+<li>有返回值</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
+<h5 id="6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"><a href="#6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。" class="headerlink" title="6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"></a>6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。</h5><ul>
+<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
+<li>会更改原数组</li>
+<li>有返回值，始终都会返回一个数组，该数组中包含从原始数组中删除的项，如果没有删除任何项，则返回一个空数组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>JS</tag>
+        <tag>数组</tag>
       </tags>
   </entry>
   <entry>

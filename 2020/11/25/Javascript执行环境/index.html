@@ -84,15 +84,15 @@
 <meta name="description" content="一步一步重温 JavaScript 基础系列。本章节将会理解JS的执行环境即执行上下文相关概念，包括变量对象、活动对象、以及两者区别  概念执行环境（execution context）定义了变量或函数有权访问的其它数据，决定了各自的行为。当JS代码执行的时候，会进入不同的执行环境，这些不同的执行环境就构成了执行环境栈。当执行环境中的代码执行完毕之后，执行环境被销毁，其中的所有变量和函数也随之销">
 <meta name="keywords" content="JS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Javascript执行环境">
+<meta property="og:title" content="Javascript执行环境及作用域">
 <meta property="og:url" content="https://suifengcool.github.io/2020/11/25/Javascript执行环境/index.html">
 <meta property="og:site_name" content="Suifeng">
 <meta property="og:description" content="一步一步重温 JavaScript 基础系列。本章节将会理解JS的执行环境即执行上下文相关概念，包括变量对象、活动对象、以及两者区别  概念执行环境（execution context）定义了变量或函数有权访问的其它数据，决定了各自的行为。当JS代码执行的时候，会进入不同的执行环境，这些不同的执行环境就构成了执行环境栈。当执行环境中的代码执行完毕之后，执行环境被销毁，其中的所有变量和函数也随之销">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://suifengcool.github.io/images/执行环境01.jpg">
-<meta property="og:updated_time" content="2020-11-30T14:40:44.969Z">
+<meta property="og:updated_time" content="2020-12-01T03:20:17.330Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Javascript执行环境">
+<meta name="twitter:title" content="Javascript执行环境及作用域">
 <meta name="twitter:description" content="一步一步重温 JavaScript 基础系列。本章节将会理解JS的执行环境即执行上下文相关概念，包括变量对象、活动对象、以及两者区别  概念执行环境（execution context）定义了变量或函数有权访问的其它数据，决定了各自的行为。当JS代码执行的时候，会进入不同的执行环境，这些不同的执行环境就构成了执行环境栈。当执行环境中的代码执行完毕之后，执行环境被销毁，其中的所有变量和函数也随之销">
 <meta name="twitter:image" content="https://suifengcool.github.io/images/执行环境01.jpg">
 
@@ -130,7 +130,7 @@
 
 
 
-  <title>Javascript执行环境 | Suifeng</title>
+  <title>Javascript执行环境及作用域 | Suifeng</title>
   
 
 
@@ -306,7 +306,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Javascript执行环境</h2>
+          <h2 class="post-title" itemprop="name headline">Javascript执行环境及作用域</h2>
         
 
         <div class="post-meta">
@@ -361,7 +361,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.5k
+                  2.5k
                 </span>
               
 
@@ -377,7 +377,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  9
                 </span>
               
             </div>
@@ -406,7 +406,7 @@
 <p>每个执行环境都有三个重要的属性：变量对象（VO）、作用域链（scope chain）以及 this。</p>
 <p><img src="/images/执行环境01.jpg" alt="按值传递图解"><br>注：对于VO来说，函数表达式不包含在VO中，没有使用var声明的变量也不包含在VO中，这种方式只是给Global添加了一个属性。</p>
 <h2 id="执行上下文类型"><a href="#执行上下文类型" class="headerlink" title="执行上下文类型"></a>执行上下文类型</h2><ul>
-<li><strong>全局执行上下文</strong>，还有一个，在浏览器中，通常为windows对象，所有的全局变量和函数都作为window对象的属性和方法存在。对于全局执行环境来说，当关闭网页或浏览器时，该环境被销毁；</li>
+<li><strong>全局执行上下文</strong>，只有一个，在浏览器中，通常为windows对象，所有的全局变量和函数都作为window对象的属性和方法存在。对于全局执行环境来说，当关闭网页或浏览器时，该环境被销毁；</li>
 <li><strong>局部（函数）执行上下文</strong> ，每个函数都有自己的执行环境，当js执行流进入一个函数时，函数的环境会被推入一个环境栈中，当函数执行完毕后，栈将其环境弹出，该环境随即被销毁；</li>
 <li><strong>Eval上下文</strong>，运行在 eval 函数中的代码，由于eval 的性能低、不易调试且有安全问题，一般禁止使用。 </li>
 </ul>
@@ -429,6 +429,22 @@
 <h3 id="活动对象（Activation-Object，简称AO）"><a href="#活动对象（Activation-Object，简称AO）" class="headerlink" title="活动对象（Activation Object，简称AO）"></a>活动对象（Activation Object，简称AO）</h3><p>当进入到一个执行上下文后，这个变量对象才会被激活，所以叫活动对象(AO)，这时候活动对象上的各种属性才能被访问。</p>
 <p>函数的执行环境是在调用时创建的，在创建函数执行环境的同时会对应创建一个带有arguments属性的AO对象，该对象将代替VO对象来保存当前函数环境中的变量、参数和函数，所以在函数执行环境中VO就是AO。</p>
 <h3 id="VO和AO的区别"><a href="#VO和AO的区别" class="headerlink" title="VO和AO的区别"></a>VO和AO的区别</h3><p>① 非函数执行环境对应创建一个VO对象；<br>② 函数执行环境对应创建一个默认带有arguments属性的AO对象；<br>③ AO是函数执行环境下的VO，两者的作用是相同的。</p>
+<h2 id="作用域-和-作用域链"><a href="#作用域-和-作用域链" class="headerlink" title="作用域 和 作用域链"></a>作用域 和 作用域链</h2><h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p><strong>作用域</strong>就是变量和函数的可访问范围。</p>
+<ul>
+<li><strong>全局作用域</strong>，在代码中任何地方都能访问到的对象拥有全局作用域<br>  ① window 对象的内置属性都拥有全局作用域；<br>  ② 定义在最外层的函数和变量拥有全局作用域；<br>  ③ 所有未定义但直接赋值的变量也拥有全局作用域。</li>
+<li><strong>局部作用域</strong>，和全局作用域相反，局部作用域一般只在固定的代码片段内可访问到，最常见的例如函数内部，所以也称为函数作用域</li>
+<li><p><strong>块级作用域</strong>，意思是由花括号封闭的代码块有自己的作用域<br>  ① <strong>没有块级作用域</strong>，es6之前，js没有块级作用域，由此会产生问题：<strong>在if或者for循环中声明的变量会泄露成全局变量</strong></p>
+<p>  代码理解如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 例子1：</span><br><span class="line">if(true) &#123;</span><br><span class="line">	var color = &apos;blue&apos;;</span><br><span class="line">&#125;</span><br><span class="line">console.log(color)</span><br><span class="line">// 在if语句中声明的变量，会被添加至if语句当前的执行环境中（此时为全局作用域）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 例子2：</span><br><span class="line">for(var i=0;i &lt; 10; i ++)&#123;</span><br><span class="line">	// doSomeThing(i)</span><br><span class="line">&#125;</span><br><span class="line">console.log(&apos;i:&apos;, i)</span><br><span class="line">// 结果会返回10，对于有块级作用域的语言来说，for语句内定义的变量，只会存在于循环体内，而es6之前，js没有块级作用域，由for语句定义的变量i，即使for循环结束后，也依旧存在于for语句所在的执行环境中。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 例子3：</span><br><span class="line">var temp = &apos;green&apos;;</span><br><span class="line">function foo() &#123;</span><br><span class="line">	console.log(temp);</span><br><span class="line">	if(false) &#123;</span><br><span class="line">		var temp = &apos;blue&apos;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line">// 结果打印为&apos;undefined&apos;。虽然按照我们常规理解，由于if语句并不会被执行，在foo函数作用域内，左右没有temp变量的值， 此时向上查找到全局作用域确定temp变量的值为green。但是由于js没有块级作用域，if语句中声明的变量，会被添加至if语句所在的执行环境中，所以在变量提升的前提下，此时temp值为 &apos;undefined&apos;。</span><br></pre></td></tr></table></figure>
+<p>  ② <strong>es6块级块级作用域</strong></p>
+<p>  ③ <strong>模仿块级作用域</strong>，ES6以前变量的作用域是函数范围，有时在函数内局部需要一些临时变量，因为没有块级作用域，所以就会将局部代码封装到IIEF（立即执行函数）中。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 立即执行函数</span><br><span class="line">(function()&#123;</span><br><span class="line">  var temp = &quot;hello world&quot;;</span><br><span class="line">&#125;());</span><br><span class="line"></span><br><span class="line">// 块级作用域</span><br><span class="line">&#123;</span><br><span class="line">  var temp = &quot;hello world&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  明白了块级作用域，模仿块级作用域，咱们再来道老生常谈的旧菜测试一下：<strong>如何在for循环中，依次打印出 0,1,2 ?</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 方式①  使用匿名函数自执行，模仿块级作用域</span><br><span class="line">for (var i=0; i &lt; 3; i ++) &#123;</span><br><span class="line">  (function (a) &#123;</span><br><span class="line">    console.log(a)</span><br><span class="line">  &#125;)(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 方式② 使用es6 let，自带块级作用域</span><br><span class="line">for (let i=0; i &lt; 3; i ++) &#123;</span><br><span class="line">  console.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h3><p>在确定一个变量的值时，首先会从当前所在的局部作用域内查找，如果找到则停止，否则就会在上级作用域内查找，直到全局作用域。这个逐级向上查找形成的链条，就称之为作用域链。</p>
+<p>来道小菜，测试一下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var scope = &quot;global&quot;;</span><br><span class="line">function foo()&#123;</span><br><span class="line">    console.log(scope);</span><br><span class="line">    var scope = &quot;local&quot;;</span><br><span class="line">    console.log(scope);</span><br><span class="line">&#125;</span><br><span class="line">foo();</span><br><span class="line"></span><br><span class="line">// 打印结果为：&apos;undefined&apos;, &apos;local&apos;</span><br><span class="line">// 在函数foo内部，由于存在变量提升，scope首先会被赋值为&apos;undefined&apos;，也就是说在函数作用域内已经找到scope变量的值，查找结束，所以第一个打印为&apos;undefined&apos;。接着，进行变量重新赋值，所以第二个打印为&apos;local&apos;。当然了，这道题的考点主要在变量提升，咱们接着聊。</span><br></pre></td></tr></table></figure></p>
 <h2 id="函数声明，变量声明，函数表达式的优先级"><a href="#函数声明，变量声明，函数表达式的优先级" class="headerlink" title="函数声明，变量声明，函数表达式的优先级"></a>函数声明，变量声明，函数表达式的优先级</h2><ul>
 <li>函数声明，如果有同名属性，后面会替换前面</li>
 <li>函数声明优先级高于变量声明</li>
@@ -478,7 +494,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://suifengcool.github.io/2020/11/25/Javascript执行环境/" title="Javascript执行环境">https://suifengcool.github.io/2020/11/25/Javascript执行环境/</a>
+    <a href="https://suifengcool.github.io/2020/11/25/Javascript执行环境/" title="Javascript执行环境及作用域">https://suifengcool.github.io/2020/11/25/Javascript执行环境/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -676,7 +692,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文类型"><span class="nav-number">2.</span> <span class="nav-text">执行上下文类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">3.</span> <span class="nav-text">执行栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文的生命周期"><span class="nav-number">4.</span> <span class="nav-text">执行上下文的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建阶段"><span class="nav-number">4.1.</span> <span class="nav-text">创建阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行阶段"><span class="nav-number">4.2.</span> <span class="nav-text">执行阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量对象（AO）和活动对象（VO）"><span class="nav-number">5.</span> <span class="nav-text">变量对象（AO）和活动对象（VO）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#变量对象（Variable-Object，简称VO）"><span class="nav-number">5.1.</span> <span class="nav-text">变量对象（Variable Object，简称VO）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#活动对象（Activation-Object，简称AO）"><span class="nav-number">5.2.</span> <span class="nav-text">活动对象（Activation Object，简称AO）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VO和AO的区别"><span class="nav-number">5.3.</span> <span class="nav-text">VO和AO的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数声明，变量声明，函数表达式的优先级"><span class="nav-number">6.</span> <span class="nav-text">函数声明，变量声明，函数表达式的优先级</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文类型"><span class="nav-number">2.</span> <span class="nav-text">执行上下文类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">3.</span> <span class="nav-text">执行栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文的生命周期"><span class="nav-number">4.</span> <span class="nav-text">执行上下文的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建阶段"><span class="nav-number">4.1.</span> <span class="nav-text">创建阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行阶段"><span class="nav-number">4.2.</span> <span class="nav-text">执行阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量对象（AO）和活动对象（VO）"><span class="nav-number">5.</span> <span class="nav-text">变量对象（AO）和活动对象（VO）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#变量对象（Variable-Object，简称VO）"><span class="nav-number">5.1.</span> <span class="nav-text">变量对象（Variable Object，简称VO）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#活动对象（Activation-Object，简称AO）"><span class="nav-number">5.2.</span> <span class="nav-text">活动对象（Activation Object，简称AO）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VO和AO的区别"><span class="nav-number">5.3.</span> <span class="nav-text">VO和AO的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域-和-作用域链"><span class="nav-number">6.</span> <span class="nav-text">作用域 和 作用域链</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#作用域"><span class="nav-number">6.1.</span> <span class="nav-text">作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作用域链"><span class="nav-number">6.2.</span> <span class="nav-text">作用域链</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数声明，变量声明，函数表达式的优先级"><span class="nav-number">7.</span> <span class="nav-text">函数声明，变量声明，函数表达式的优先级</span></a></li></ol></div>
             
 
           </div>
