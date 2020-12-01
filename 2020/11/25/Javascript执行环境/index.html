@@ -90,7 +90,7 @@
 <meta property="og:description" content="一步一步重温 JavaScript 基础系列。本章节将会理解JS的执行环境即执行上下文相关概念，包括变量对象、活动对象、以及两者区别  概念执行环境（execution context）定义了变量或函数有权访问的其它数据，决定了各自的行为。当JS代码执行的时候，会进入不同的执行环境，这些不同的执行环境就构成了执行环境栈。当执行环境中的代码执行完毕之后，执行环境被销毁，其中的所有变量和函数也随之销">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://suifengcool.github.io/images/执行环境01.jpg">
-<meta property="og:updated_time" content="2020-12-01T06:21:35.474Z">
+<meta property="og:updated_time" content="2020-12-01T08:26:14.500Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript执行环境及作用域">
 <meta name="twitter:description" content="一步一步重温 JavaScript 基础系列。本章节将会理解JS的执行环境即执行上下文相关概念，包括变量对象、活动对象、以及两者区别  概念执行环境（execution context）定义了变量或函数有权访问的其它数据，决定了各自的行为。当JS代码执行的时候，会进入不同的执行环境，这些不同的执行环境就构成了执行环境栈。当执行环境中的代码执行完毕之后，执行环境被销毁，其中的所有变量和函数也随之销">
@@ -451,11 +451,6 @@
 <h3 id="活动对象（Activation-Object，简称AO）"><a href="#活动对象（Activation-Object，简称AO）" class="headerlink" title="活动对象（Activation Object，简称AO）"></a>活动对象（Activation Object，简称AO）</h3><p>当进入到一个执行上下文后，这个变量对象才会被激活，所以叫活动对象(AO)，这时候活动对象上的各种属性才能被访问。</p>
 <p>函数的执行环境是在调用时创建的，在创建函数执行环境的同时会对应创建一个带有arguments属性的AO对象，该对象将代替VO对象来保存当前函数环境中的变量、参数和函数，所以在函数执行环境中VO就是AO。</p>
 <h3 id="VO和AO的区别"><a href="#VO和AO的区别" class="headerlink" title="VO和AO的区别"></a>VO和AO的区别</h3><p>① 非函数执行环境对应创建一个VO对象；<br>② 函数执行环境对应创建一个默认带有arguments属性的AO对象；<br>③ AO是函数执行环境下的VO，两者的作用是相同的。</p>
-<h2 id="函数声明，变量声明，函数表达式的优先级"><a href="#函数声明，变量声明，函数表达式的优先级" class="headerlink" title="函数声明，变量声明，函数表达式的优先级"></a>函数声明，变量声明，函数表达式的优先级</h2><ul>
-<li>函数声明，如果有同名属性，后面会替换前面</li>
-<li>函数声明优先级高于变量声明</li>
-<li>函数表达式不会有变量提升</li>
-</ul>
 
       
     </div>
@@ -702,7 +697,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文类型"><span class="nav-number">2.</span> <span class="nav-text">执行上下文类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">3.</span> <span class="nav-text">执行栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文的生命周期"><span class="nav-number">4.</span> <span class="nav-text">执行上下文的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建阶段"><span class="nav-number">4.1.</span> <span class="nav-text">创建阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行阶段"><span class="nav-number">4.2.</span> <span class="nav-text">执行阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量对象（AO）和活动对象（VO）"><span class="nav-number">5.</span> <span class="nav-text">变量对象（AO）和活动对象（VO）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#变量对象（Variable-Object，简称VO）"><span class="nav-number">5.1.</span> <span class="nav-text">变量对象（Variable Object，简称VO）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#活动对象（Activation-Object，简称AO）"><span class="nav-number">5.2.</span> <span class="nav-text">活动对象（Activation Object，简称AO）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VO和AO的区别"><span class="nav-number">5.3.</span> <span class="nav-text">VO和AO的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数声明，变量声明，函数表达式的优先级"><span class="nav-number">6.</span> <span class="nav-text">函数声明，变量声明，函数表达式的优先级</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文类型"><span class="nav-number">2.</span> <span class="nav-text">执行上下文类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">3.</span> <span class="nav-text">执行栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行上下文的生命周期"><span class="nav-number">4.</span> <span class="nav-text">执行上下文的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建阶段"><span class="nav-number">4.1.</span> <span class="nav-text">创建阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行阶段"><span class="nav-number">4.2.</span> <span class="nav-text">执行阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量对象（AO）和活动对象（VO）"><span class="nav-number">5.</span> <span class="nav-text">变量对象（AO）和活动对象（VO）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#变量对象（Variable-Object，简称VO）"><span class="nav-number">5.1.</span> <span class="nav-text">变量对象（Variable Object，简称VO）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#活动对象（Activation-Object，简称AO）"><span class="nav-number">5.2.</span> <span class="nav-text">活动对象（Activation Object，简称AO）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VO和AO的区别"><span class="nav-number">5.3.</span> <span class="nav-text">VO和AO的区别</span></a></li></ol></li></ol></div>
             
 
           </div>
