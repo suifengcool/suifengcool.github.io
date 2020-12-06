@@ -1,31 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>ES6中 export default 和 export 区别</title>
-    <url>/2017/12/08/ES6-export-default-%E5%92%8C-export-%E5%8C%BA%E5%88%AB/</url>
-    <content><![CDATA[<blockquote>
-<p>es6渐入主流，export default 和 export经常使用，但是偶尔也会采坑，难得今天公司网络故障，没法做事，正好可以写点心得，避免后面遗忘。</p>
-</blockquote>
-<ul>
-<li>export：使用命名导出</li>
-<li>export default：使用默认导出</li>
-</ul>
-<a id="more"></a>
-<h4 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h4><ul>
-<li>1、 export 与 export default 均可用于导出常量、函数、文件、模块等；</li>
-<li>2、均可以在其他模块和文件使用import的方式进行导入使用；</li>
-</ul>
-<h4 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h4><ul>
-<li>1、通过export方式导出，在导入时需以对象方式进行导入，即加上{xxx}，但是export default不需要；</li>
-<li>2、 在一个导出文件或模块中，export可以有很多个，但是export default 只能有一个。</li>
-<li>3、 使用export default进行导出，导入时可以使用任意变量名称</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1.使用<span class="built_in">export</span>导出</span><br><span class="line"></span><br><span class="line">①方式一</span><br><span class="line">// utils.js 导出文件</span><br><span class="line"><span class="built_in">export</span> const setCookie = (name, value, time) =&gt; &#123;</span><br><span class="line">    <span class="built_in">let</span> days = time || 7;    // 默认保存7天</span><br><span class="line">    <span class="built_in">let</span> exp = new Date();</span><br><span class="line">    const PATH = location.pathname.split(<span class="string">'/'</span>)[1];</span><br><span class="line">    <span class="built_in">let</span> _path = (PATH.length == 0 || PATH.indexOf(<span class="string">'.'</span>) != -1) ? <span class="string">'/'</span> : PATH;</span><br><span class="line">    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);</span><br><span class="line">    document.cookie = `<span class="variable">$&#123;name&#125;</span>=<span class="variable">$&#123;escape(value)&#125;</span>;path=<span class="variable">$&#123;_path&#125;</span>;expires=<span class="variable">$&#123;exp.toGMTString()&#125;</span>`;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> <span class="keyword">function</span> getCookie(name)&#123;</span><br><span class="line">    <span class="built_in">let</span> arr, reg = new RegExp(<span class="string">"(^| )"</span> + name + <span class="string">"=([^;]*)(;|$)"</span>)</span><br><span class="line">    <span class="keyword">if</span> (arr = document.cookie.match(reg))</span><br><span class="line">        <span class="built_in">return</span> unescape(arr[2]);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">return</span> null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//b.js 导入文件</span><br><span class="line">import &#123; setCookie, getCookie &#125; from <span class="string">'./utils'</span>; //也可以分开写两次，导入的时候带花括号</span><br><span class="line"></span><br><span class="line">②方式二</span><br><span class="line">// foo.js 导出文件</span><br><span class="line"><span class="built_in">export</span> <span class="keyword">function</span> foo2(x) &#123;</span><br><span class="line">  <span class="built_in">return</span> x * x * x;</span><br><span class="line">&#125;</span><br><span class="line">const foo2 = Math.floor(Math.random()*9 + 3);</span><br><span class="line"><span class="built_in">export</span> &#123; foo1,foo2 &#125;;</span><br><span class="line"></span><br><span class="line">// use.js 导入文件</span><br><span class="line">import &#123; foo1, foo2 &#125; from <span class="string">'foo.js'</span>;</span><br><span class="line">console.log(foo1(3)); // 27</span><br><span class="line">console.log(foo2);    // 3-12之间随机数</span><br><span class="line"></span><br><span class="line">2.使用<span class="built_in">export</span> default导出</span><br><span class="line">// utils.js</span><br><span class="line">const unique = (a) =&gt; &#123;</span><br><span class="line">    var <span class="built_in">hash</span> = &#123;&#125;,</span><br><span class="line">        len = a.length,</span><br><span class="line">        arr = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (var i = 0; i &lt; len; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">hash</span>[a[i]]) &#123;</span><br><span class="line">            <span class="built_in">hash</span>[a[i]] = <span class="literal">true</span>;</span><br><span class="line">            arr.push(a[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> default unique;</span><br><span class="line"></span><br><span class="line">//b.js 导入文件</span><br><span class="line">import unique from <span class="string">'./utils'</span>; //注意，导入的时候没有花括号</span><br></pre></td></tr></table></figure>]]></content>
-      <tags>
-        <tag>JS</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JS 数组map()方法到底会不会改变原数组</title>
     <url>/2018/01/22/JS-%E6%95%B0%E7%BB%84map-%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E4%BC%9A%E4%B8%8D%E4%BC%9A%E6%94%B9%E5%8F%98%E5%8E%9F%E6%95%B0%E7%BB%84/</url>
     <content><![CDATA[<p>　　之前写过关于js数组map()的一篇文章，当时的结论是map()会改变原数组，后来仔细想了一下，其实这个结论很不严谨。那到底结论如何呢，先不慌，看以下两个示例：<br>　　<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr1 = [<span class="string">'xugang'</span>,<span class="string">'wangran'</span>]</span><br><span class="line">arr1.map((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item += <span class="string">'good'</span></span><br><span class="line">&#125;)</span><br><span class="line">arr1 //arr1 = [<span class="string">'xugang'</span>,<span class="string">'wangran'</span>]</span><br></pre></td></tr></table></figure></p>
@@ -67,6 +42,31 @@
       </tags>
   </entry>
   <entry>
+    <title>ES6中 export default 和 export 区别</title>
+    <url>/2017/12/08/ES6-export-default-%E5%92%8C-export-%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<blockquote>
+<p>es6渐入主流，export default 和 export经常使用，但是偶尔也会采坑，难得今天公司网络故障，没法做事，正好可以写点心得，避免后面遗忘。</p>
+</blockquote>
+<ul>
+<li>export：使用命名导出</li>
+<li>export default：使用默认导出</li>
+</ul>
+<a id="more"></a>
+<h4 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h4><ul>
+<li>1、 export 与 export default 均可用于导出常量、函数、文件、模块等；</li>
+<li>2、均可以在其他模块和文件使用import的方式进行导入使用；</li>
+</ul>
+<h4 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h4><ul>
+<li>1、通过export方式导出，在导入时需以对象方式进行导入，即加上{xxx}，但是export default不需要；</li>
+<li>2、 在一个导出文件或模块中，export可以有很多个，但是export default 只能有一个。</li>
+<li>3、 使用export default进行导出，导入时可以使用任意变量名称</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1.使用<span class="built_in">export</span>导出</span><br><span class="line"></span><br><span class="line">①方式一</span><br><span class="line">// utils.js 导出文件</span><br><span class="line"><span class="built_in">export</span> const setCookie = (name, value, time) =&gt; &#123;</span><br><span class="line">    <span class="built_in">let</span> days = time || 7;    // 默认保存7天</span><br><span class="line">    <span class="built_in">let</span> exp = new Date();</span><br><span class="line">    const PATH = location.pathname.split(<span class="string">'/'</span>)[1];</span><br><span class="line">    <span class="built_in">let</span> _path = (PATH.length == 0 || PATH.indexOf(<span class="string">'.'</span>) != -1) ? <span class="string">'/'</span> : PATH;</span><br><span class="line">    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);</span><br><span class="line">    document.cookie = `<span class="variable">$&#123;name&#125;</span>=<span class="variable">$&#123;escape(value)&#125;</span>;path=<span class="variable">$&#123;_path&#125;</span>;expires=<span class="variable">$&#123;exp.toGMTString()&#125;</span>`;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> <span class="keyword">function</span> getCookie(name)&#123;</span><br><span class="line">    <span class="built_in">let</span> arr, reg = new RegExp(<span class="string">"(^| )"</span> + name + <span class="string">"=([^;]*)(;|$)"</span>)</span><br><span class="line">    <span class="keyword">if</span> (arr = document.cookie.match(reg))</span><br><span class="line">        <span class="built_in">return</span> unescape(arr[2]);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">return</span> null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//b.js 导入文件</span><br><span class="line">import &#123; setCookie, getCookie &#125; from <span class="string">'./utils'</span>; //也可以分开写两次，导入的时候带花括号</span><br><span class="line"></span><br><span class="line">②方式二</span><br><span class="line">// foo.js 导出文件</span><br><span class="line"><span class="built_in">export</span> <span class="keyword">function</span> foo2(x) &#123;</span><br><span class="line">  <span class="built_in">return</span> x * x * x;</span><br><span class="line">&#125;</span><br><span class="line">const foo2 = Math.floor(Math.random()*9 + 3);</span><br><span class="line"><span class="built_in">export</span> &#123; foo1,foo2 &#125;;</span><br><span class="line"></span><br><span class="line">// use.js 导入文件</span><br><span class="line">import &#123; foo1, foo2 &#125; from <span class="string">'foo.js'</span>;</span><br><span class="line">console.log(foo1(3)); // 27</span><br><span class="line">console.log(foo2);    // 3-12之间随机数</span><br><span class="line"></span><br><span class="line">2.使用<span class="built_in">export</span> default导出</span><br><span class="line">// utils.js</span><br><span class="line">const unique = (a) =&gt; &#123;</span><br><span class="line">    var <span class="built_in">hash</span> = &#123;&#125;,</span><br><span class="line">        len = a.length,</span><br><span class="line">        arr = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (var i = 0; i &lt; len; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">hash</span>[a[i]]) &#123;</span><br><span class="line">            <span class="built_in">hash</span>[a[i]] = <span class="literal">true</span>;</span><br><span class="line">            arr.push(a[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> default unique;</span><br><span class="line"></span><br><span class="line">//b.js 导入文件</span><br><span class="line">import unique from <span class="string">'./utils'</span>; //注意，导入的时候没有花括号</span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JS 数组去重</title>
     <url>/2018/02/06/JS-%E6%95%B0%E7%BB%84%E5%8E%BB%E9%87%8D/</url>
     <content><![CDATA[<ul>
@@ -84,6 +84,43 @@
   <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">	const unique = (arrwy,key) =&gt; &#123;</span><br><span class="line">	    <span class="built_in">let</span> obj = &#123;&#125;, arr = [];</span><br><span class="line">	    arrwy.forEach((ele, index) =&gt; &#123;</span><br><span class="line">	        <span class="keyword">if</span>(obj[ele.key])&#123;</span><br><span class="line">	            <span class="built_in">return</span></span><br><span class="line">	        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	            obj[ele.key] = <span class="string">'1'</span>;</span><br><span class="line">	            arr.push(ele)</span><br><span class="line">	        &#125;</span><br><span class="line">	    &#125;);</span><br><span class="line">	    <span class="built_in">return</span> arr;</span><br><span class="line">	&#125;</span><br><span class="line">	```	</span><br><span class="line">	</span><br><span class="line">	原理：new一个空对象和一个空数组，遍历原数组，将原数组每一项的指定属性的属性值作为空对象的新增属性，循环过程中，如果目标对象已经包含该属性，则<span class="built_in">return</span>，否则给该属性取值为1，并把该属性push进空数组。此空数组即为原数组去重后的数组。</span><br><span class="line">	</span><br><span class="line">* 4、 数组元素为对象，且去重标准为其中的某几个属性</span><br><span class="line"></span><br><span class="line">	``` bash</span><br><span class="line">		//将对象元素转换成字符串以作比较  </span><br><span class="line">		<span class="keyword">function</span> obj2key(obj, keys)&#123;  </span><br><span class="line">		    var n = keys.length,  </span><br><span class="line">		        key = [];  </span><br><span class="line">		    <span class="keyword">while</span>(n--)&#123;  </span><br><span class="line">		        key.push(obj[keys[n]]);  </span><br><span class="line">		    &#125;  </span><br><span class="line">		    <span class="built_in">return</span> key.join(<span class="string">'|'</span>);  </span><br><span class="line">		&#125;  </span><br><span class="line">		</span><br><span class="line">		//去重操作  </span><br><span class="line">		<span class="keyword">function</span> uniqeByKeys(array,keys)&#123;  </span><br><span class="line">		    var arr = [];  </span><br><span class="line">		    var <span class="built_in">hash</span> = &#123;&#125;;  </span><br><span class="line">		    <span class="keyword">for</span> (var i = 0, j = array.length; i &lt; j; i++) &#123;  </span><br><span class="line">		        var k = obj2key(array[i], keys);  </span><br><span class="line">		        <span class="keyword">if</span> (!(k <span class="keyword">in</span> <span class="built_in">hash</span>)) &#123;  </span><br><span class="line">		            <span class="built_in">hash</span>[k] = <span class="literal">true</span>;  </span><br><span class="line">		            arr .push(array[i]);  </span><br><span class="line">		        &#125;  </span><br><span class="line">		    &#125;  </span><br><span class="line">		    <span class="built_in">return</span> arr ;  </span><br><span class="line">		&#125; </span><br><span class="line">		</span><br><span class="line">		<span class="built_in">let</span> arr = [&#123;</span><br><span class="line">			name: <span class="string">'aaa'</span>,</span><br><span class="line">			<span class="built_in">type</span>: <span class="string">'shop'</span></span><br><span class="line">		&#125;,&#123;</span><br><span class="line">			name: <span class="string">'bbb'</span>,</span><br><span class="line">			<span class="built_in">type</span>: <span class="string">'msg'</span></span><br><span class="line">		&#125;,&#123;</span><br><span class="line">			name: <span class="string">'bbb'</span>,</span><br><span class="line">			<span class="built_in">type</span>: <span class="string">'msg'</span></span><br><span class="line">		&#125;];</span><br><span class="line">		arr = uniqeByKeys(arr,[<span class="string">'name'</span>,<span class="string">'type'</span>]);</span><br></pre></td></tr></table></figure></li>
 </ul>
 ]]></content>
+      <tags>
+        <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JS数据类型</title>
+    <url>/2020/11/22/JS%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<blockquote>
+<p>一步一步重温 <strong>JavaScript</strong> 基础系列。<br>本章节将会理解JS的数据类型，以及如何检测JS数据类型。</p>
+</blockquote>
+<h2 id="1-JavaScript-数据类型"><a href="#1-JavaScript-数据类型" class="headerlink" title="1 JavaScript 数据类型"></a>1 JavaScript 数据类型</h2><ul>
+<li>六种基本数据类型：Null、Undefined、Boolean、Number、String 和 Symbol（es6）</li>
+<li>一种引用数据类型：Object</li>
+</ul>
+<a id="more"></a>
+<h3 id="1-1-Null-和-Undefined-区别"><a href="#1-1-Null-和-Undefined-区别" class="headerlink" title="1.1 Null 和 Undefined 区别"></a>1.1 Null 和 Undefined 区别</h3><ul>
+<li>Null 是指变量未声明， 或者声明但未赋值</li>
+<li>Undefined 是指变量声明且赋值为空</li>
+</ul>
+<p>一般会在以下两种情况下，将变量赋值为null:</p>
+<ol>
+<li>当一个变量准备用来存放一个对象，一开始又没有存放时，可以先赋值为null</li>
+<li>解除引用，比如释放定时器等（注：解除一个值的引用并不意味着自动回收该值所占用的内存，让变量脱离执行环境，以便垃圾收集器在下次运行时将其回收）</li>
+</ol>
+<h3 id="1-2-Symbol"><a href="#1-2-Symbol" class="headerlink" title="1.2 Symbol"></a>1.2 Symbol</h3><p>一种类似于字符串的数据类型，表示独一无二的值，用来防止属性名的冲突</p>
+<h2 id="3-检测数据类型"><a href="#3-检测数据类型" class="headerlink" title="3 检测数据类型"></a>3 检测数据类型</h2><p>① typeof 返回该种数据类型的字符串形式，如：</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">typeof 1          // &quot;number&quot;</span><br><span class="line">typeof(typeof 1)  // &quot;string&quot;</span><br><span class="line">  </span><br><span class="line">typeof null       // &quot;object&quot;, null表示一个空对象指针，故返回&quot;object&quot;</span><br><span class="line">typeof foo        // &quot;function&quot;, function也是对象，理论上应返回&quot;object&quot;, 但是函数有其特殊属性，有必要进行区分，故返回 &quot;function&quot;</span><br></pre></td></tr></table></figure>
+<p>  <code>typeof</code> 只能用来检测除 <code>null</code> 类型外的其它基本类型，另外能够检测出引用类型中 <code>function</code> 数据类型。</p>
+<p>② instanceof 运算符用来检测 constructor.prototype 是否存在于参数 object 的原型链上， 如下：<br>  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function A () &#123;&#125;</span><br><span class="line">function B () &#123;&#125;</span><br><span class="line"></span><br><span class="line">var a = new A()</span><br><span class="line">var B = new B()</span><br><span class="line"></span><br><span class="line">a instanceof A    // true, 因为Object.getPrototypeOf(a).__proto__ === A.prototype</span><br><span class="line">a instanceof B    // false</span><br></pre></td></tr></table></figure></p>
+<p>  <code>instanceof</code>只能够检测出引用类型的变量，是否在右侧构造函数的原型链上，并且由于所有引用类型都是Object的实例，所以在检测一个引用类型的变量 和 Object构造函数时，instanceof操作符始终会返回true。</p>
+<p>③ Object.prototype.toString， 能够检测出所有的数据类型， 如下：</p>
+  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Object.prototype.toString.call(1)    // &quot;[object Number]&quot;</span><br><span class="line">Object.prototype.toString.call(&apos;1&apos;)  // &quot;[object String]&quot;</span><br><span class="line">Object.prototype.toString.call(null) // &quot;[object Null]&quot;</span><br><span class="line">Object.prototype.toString.call(&#123;&#125;)   // &quot;[object Object]&quot;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>综上所述，JS检测数据，最优方法如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/*</span><br><span class="line"> * @desc   数据类型检测</span><br><span class="line"> * @params val &#123; any &#125; 待检测的数据</span><br><span class="line"> * @return &#123; String &#125; 类型字符串 </span><br><span class="line"> */</span><br><span class="line">function type(val) &#123;     </span><br><span class="line">	return typeof val !== &quot;object&quot; </span><br><span class="line">		? typeof val </span><br><span class="line">		: Object.prototype.toString.call(val).slice(8, -1).toLowerCase(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
       <tags>
         <tag>JS</tag>
       </tags>
@@ -195,96 +232,6 @@
       </tags>
   </entry>
   <entry>
-    <title>JS数据类型</title>
-    <url>/2020/11/22/JS%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
-    <content><![CDATA[<blockquote>
-<p>一步一步重温 <strong>JavaScript</strong> 基础系列。<br>本章节将会理解JS的数据类型，以及如何检测JS数据类型。</p>
-</blockquote>
-<h2 id="1-JavaScript-数据类型"><a href="#1-JavaScript-数据类型" class="headerlink" title="1 JavaScript 数据类型"></a>1 JavaScript 数据类型</h2><ul>
-<li>六种基本数据类型：Null、Undefined、Boolean、Number、String 和 Symbol（es6）</li>
-<li>一种引用数据类型：Object</li>
-</ul>
-<a id="more"></a>
-<h3 id="1-1-Null-和-Undefined-区别"><a href="#1-1-Null-和-Undefined-区别" class="headerlink" title="1.1 Null 和 Undefined 区别"></a>1.1 Null 和 Undefined 区别</h3><ul>
-<li>Null 是指变量未声明， 或者声明但未赋值</li>
-<li>Undefined 是指变量声明且赋值为空</li>
-</ul>
-<p>一般会在以下两种情况下，将变量赋值为null:</p>
-<ol>
-<li>当一个变量准备用来存放一个对象，一开始又没有存放时，可以先赋值为null</li>
-<li>解除引用，比如释放定时器等（注：解除一个值的引用并不意味着自动回收该值所占用的内存，让变量脱离执行环境，以便垃圾收集器在下次运行时将其回收）</li>
-</ol>
-<h3 id="1-2-Symbol"><a href="#1-2-Symbol" class="headerlink" title="1.2 Symbol"></a>1.2 Symbol</h3><p>一种类似于字符串的数据类型，表示独一无二的值，用来防止属性名的冲突</p>
-<h2 id="3-检测数据类型"><a href="#3-检测数据类型" class="headerlink" title="3 检测数据类型"></a>3 检测数据类型</h2><p>① typeof 返回该种数据类型的字符串形式，如：</p>
-  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">typeof 1          // &quot;number&quot;</span><br><span class="line">typeof(typeof 1)  // &quot;string&quot;</span><br><span class="line">  </span><br><span class="line">typeof null       // &quot;object&quot;, null表示一个空对象指针，故返回&quot;object&quot;</span><br><span class="line">typeof foo        // &quot;function&quot;, function也是对象，理论上应返回&quot;object&quot;, 但是函数有其特殊属性，有必要进行区分，故返回 &quot;function&quot;</span><br></pre></td></tr></table></figure>
-<p>  <code>typeof</code> 只能用来检测除 <code>null</code> 类型外的其它基本类型，另外能够检测出引用类型中 <code>function</code> 数据类型。</p>
-<p>② instanceof 运算符用来检测 constructor.prototype 是否存在于参数 object 的原型链上， 如下：<br>  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function A () &#123;&#125;</span><br><span class="line">function B () &#123;&#125;</span><br><span class="line"></span><br><span class="line">var a = new A()</span><br><span class="line">var B = new B()</span><br><span class="line"></span><br><span class="line">a instanceof A    // true, 因为Object.getPrototypeOf(a).__proto__ === A.prototype</span><br><span class="line">a instanceof B    // false</span><br></pre></td></tr></table></figure></p>
-<p>  <code>instanceof</code>只能够检测出引用类型的变量，是否在右侧构造函数的原型链上，并且由于所有引用类型都是Object的实例，所以在检测一个引用类型的变量 和 Object构造函数时，instanceof操作符始终会返回true。</p>
-<p>③ Object.prototype.toString， 能够检测出所有的数据类型， 如下：</p>
-  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Object.prototype.toString.call(1)    // &quot;[object Number]&quot;</span><br><span class="line">Object.prototype.toString.call(&apos;1&apos;)  // &quot;[object String]&quot;</span><br><span class="line">Object.prototype.toString.call(null) // &quot;[object Null]&quot;</span><br><span class="line">Object.prototype.toString.call(&#123;&#125;)   // &quot;[object Object]&quot;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>综上所述，JS检测数据，最优方法如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/*</span><br><span class="line"> * @desc   数据类型检测</span><br><span class="line"> * @params val &#123; any &#125; 待检测的数据</span><br><span class="line"> * @return &#123; String &#125; 类型字符串 </span><br><span class="line"> */</span><br><span class="line">function type(val) &#123;     </span><br><span class="line">	return typeof val !== &quot;object&quot; </span><br><span class="line">		? typeof val </span><br><span class="line">		: Object.prototype.toString.call(val).slice(8, -1).toLowerCase(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>JS基础</category>
-      </categories>
-      <tags>
-        <tag>JS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>git 常用操作</title>
-    <url>/2017/12/13/git-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</url>
-    <content><![CDATA[<h3 id="一、提交代码"><a href="#一、提交代码" class="headerlink" title="一、提交代码"></a>一、提交代码</h3><h5 id="查看当前目录下更改的文件"><a href="#查看当前目录下更改的文件" class="headerlink" title="查看当前目录下更改的文件"></a>查看当前目录下更改的文件</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h5 id="查看当前目录下更改文件的更改点"><a href="#查看当前目录下更改文件的更改点" class="headerlink" title="查看当前目录下更改文件的更改点"></a>查看当前目录下更改文件的更改点</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git diff</span><br></pre></td></tr></table></figure>
-<h5 id="添加当前目录下的所有文件到暂存区"><a href="#添加当前目录下的所有文件到暂存区" class="headerlink" title="添加当前目录下的所有文件到暂存区"></a>添加当前目录下的所有文件到暂存区</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git add .</span><br></pre></td></tr></table></figure>
-<h5 id="将代码从暂存区提交至仓库区"><a href="#将代码从暂存区提交至仓库区" class="headerlink" title="将代码从暂存区提交至仓库区"></a>将代码从暂存区提交至仓库区</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git commit -m <span class="string">"描述"</span></span><br></pre></td></tr></table></figure>
-<h5 id="将远程仓库区代码同步本地"><a href="#将远程仓库区代码同步本地" class="headerlink" title="将远程仓库区代码同步本地"></a>将远程仓库区代码同步本地</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull    或者 git pull origin 远程仓库名</span><br></pre></td></tr></table></figure>
-<h5 id="将本地仓库区代码提交至远程仓库"><a href="#将本地仓库区代码提交至远程仓库" class="headerlink" title="将本地仓库区代码提交至远程仓库"></a>将本地仓库区代码提交至远程仓库</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push origin 远程仓库名    或者 git push</span><br></pre></td></tr></table></figure>
-<h3 id="二、撤销操作"><a href="#二、撤销操作" class="headerlink" title="二、撤销操作"></a>二、撤销操作</h3><h5 id="撤销add操作"><a href="#撤销add操作" class="headerlink" title="撤销add操作"></a>撤销add操作</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset HEAD .</span><br></pre></td></tr></table></figure>
-<h5 id="撤销commit操作"><a href="#撤销commit操作" class="headerlink" title="撤销commit操作"></a>撤销commit操作</h5><ul>
-<li>1、找到上次git commit的commit_id</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>2、完成撤销,同时将代码恢复到前一commit_id 对应的版本。</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset --hard commit_id</span><br></pre></td></tr></table></figure>
-<ul>
-<li>或者2、完成Commit命令的撤销，但是不对代码修改进行撤销，可以直接通过git commit 重新提交对本地代码的修改。</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset commit_id</span><br></pre></td></tr></table></figure>
-<h3 id="三、查看、切换、删除、新建分支"><a href="#三、查看、切换、删除、新建分支" class="headerlink" title="三、查看、切换、删除、新建分支"></a>三、查看、切换、删除、新建分支</h3><h5 id="查看本地分支"><a href="#查看本地分支" class="headerlink" title="查看本地分支"></a>查看本地分支</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch</span><br></pre></td></tr></table></figure>
-<h5 id="查看远程分支"><a href="#查看远程分支" class="headerlink" title="查看远程分支"></a>查看远程分支</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch -a</span><br></pre></td></tr></table></figure>
-<h5 id="切换本地分支"><a href="#切换本地分支" class="headerlink" title="切换本地分支"></a>切换本地分支</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout xxx</span><br></pre></td></tr></table></figure>
-<p>注意，每次切换分支，本地当前分支均不得有变动，否则需要先提交，在切换分支</p>
-<h5 id="删除本地分支"><a href="#删除本地分支" class="headerlink" title="删除本地分支"></a>删除本地分支</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch -D xxx</span><br></pre></td></tr></table></figure>
-<h5 id="新建分支"><a href="#新建分支" class="headerlink" title="新建分支"></a>新建分支</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout -b xxx origin/master</span><br><span class="line">git push origin xxx</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
-<p>这样新建的分支，是从远程matser分支上新建的分支，并且当远程master分支代码更改时，执行git pull，本地代码也会同步远程master上代码更改。由此新建的分支，push代码时需用 git push origin xxx。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch -b xxx</span><br><span class="line">git push</span><br><span class="line">git pull origin xxx</span><br></pre></td></tr></table></figure>
-<p>需先切换至主分支，比如master上，这样新建的分支，执行git pull origin xxx，本地代码只会同步远程xxx分支上代码更改，不会同步远程master分支的代码。由此新建的分支，push代码时需用 git push 。</p>
-<h3 id="四、解决冲突"><a href="#四、解决冲突" class="headerlink" title="四、解决冲突"></a>四、解决冲突</h3><h6 id="提交代码，最好是在gitlab上面合并分支，当提示有代码冲突时，关闭当前合并请求，并使用命令行按如下方式解决冲突。"><a href="#提交代码，最好是在gitlab上面合并分支，当提示有代码冲突时，关闭当前合并请求，并使用命令行按如下方式解决冲突。" class="headerlink" title="提交代码，最好是在gitlab上面合并分支，当提示有代码冲突时，关闭当前合并请求，并使用命令行按如下方式解决冲突。"></a>提交代码，最好是在gitlab上面合并分支，当提示有代码冲突时，关闭当前合并请求，并使用命令行按如下方式解决冲突。</h6><h6 id="主分支master-待合并分支-xugang"><a href="#主分支master-待合并分支-xugang" class="headerlink" title="主分支master,待合并分支 xugang"></a>主分支master,待合并分支 xugang</h6><ul>
-<li>1、 git checkout xugang</li>
-<li>2、 git pull</li>
-<li>3、 git checkout master</li>
-<li>4、 git pull</li>
-<li>5、 git merge xugang （此时会提示存在冲突文件）</li>
-<li>6、 git status         （查看存在冲突的文件）</li>
-<li>7、 git diff           （查看冲突详情）</li>
-<li>8、 在当前本地分支master上解决冲突，一定要本地运行，确保无误</li>
-<li>9、 git push   </li>
-<li>10、git checkout xugang   （这一步尤其重要，避免在master上直接更改代码。）</li>
-</ul>
-<h3 id="五、取消追踪-amp-追踪本地文件更改"><a href="#五、取消追踪-amp-追踪本地文件更改" class="headerlink" title="五、取消追踪&amp; 追踪本地文件更改"></a>五、取消追踪&amp; 追踪本地文件更改</h3><h5 id="取消追踪本地文件更改"><a href="#取消追踪本地文件更改" class="headerlink" title="取消追踪本地文件更改"></a>取消追踪本地文件更改</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git update-index --assume-unchanged src/config/server.json</span><br></pre></td></tr></table></figure>
-<p>让git取消对server.json的track。</p>
-<h5 id="恢复追踪本地文件更改"><a href="#恢复追踪本地文件更改" class="headerlink" title="恢复追踪本地文件更改"></a>恢复追踪本地文件更改</h5><pre><code>git update-index --no-assume-unchanged src/config/server.json
-</code></pre><p>让git能够追踪记录到此文件</p>
-]]></content>
-      <tags>
-        <tag>开发工具</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Javascript执行环境及作用域</title>
     <url>/2020/11/25/Javascript%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83/</url>
     <content><![CDATA[<blockquote>
@@ -365,6 +312,59 @@
       </tags>
   </entry>
   <entry>
+    <title>git 常用操作</title>
+    <url>/2017/12/13/git-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<h3 id="一、提交代码"><a href="#一、提交代码" class="headerlink" title="一、提交代码"></a>一、提交代码</h3><h5 id="查看当前目录下更改的文件"><a href="#查看当前目录下更改的文件" class="headerlink" title="查看当前目录下更改的文件"></a>查看当前目录下更改的文件</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h5 id="查看当前目录下更改文件的更改点"><a href="#查看当前目录下更改文件的更改点" class="headerlink" title="查看当前目录下更改文件的更改点"></a>查看当前目录下更改文件的更改点</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git diff</span><br></pre></td></tr></table></figure>
+<h5 id="添加当前目录下的所有文件到暂存区"><a href="#添加当前目录下的所有文件到暂存区" class="headerlink" title="添加当前目录下的所有文件到暂存区"></a>添加当前目录下的所有文件到暂存区</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git add .</span><br></pre></td></tr></table></figure>
+<h5 id="将代码从暂存区提交至仓库区"><a href="#将代码从暂存区提交至仓库区" class="headerlink" title="将代码从暂存区提交至仓库区"></a>将代码从暂存区提交至仓库区</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git commit -m <span class="string">"描述"</span></span><br></pre></td></tr></table></figure>
+<h5 id="将远程仓库区代码同步本地"><a href="#将远程仓库区代码同步本地" class="headerlink" title="将远程仓库区代码同步本地"></a>将远程仓库区代码同步本地</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git pull    或者 git pull origin 远程仓库名</span><br></pre></td></tr></table></figure>
+<h5 id="将本地仓库区代码提交至远程仓库"><a href="#将本地仓库区代码提交至远程仓库" class="headerlink" title="将本地仓库区代码提交至远程仓库"></a>将本地仓库区代码提交至远程仓库</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git push origin 远程仓库名    或者 git push</span><br></pre></td></tr></table></figure>
+<h3 id="二、撤销操作"><a href="#二、撤销操作" class="headerlink" title="二、撤销操作"></a>二、撤销操作</h3><h5 id="撤销add操作"><a href="#撤销add操作" class="headerlink" title="撤销add操作"></a>撤销add操作</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset HEAD .</span><br></pre></td></tr></table></figure>
+<h5 id="撤销commit操作"><a href="#撤销commit操作" class="headerlink" title="撤销commit操作"></a>撤销commit操作</h5><ul>
+<li>1、找到上次git commit的commit_id</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>2、完成撤销,同时将代码恢复到前一commit_id 对应的版本。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset --hard commit_id</span><br></pre></td></tr></table></figure>
+<ul>
+<li>或者2、完成Commit命令的撤销，但是不对代码修改进行撤销，可以直接通过git commit 重新提交对本地代码的修改。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git reset commit_id</span><br></pre></td></tr></table></figure>
+<h3 id="三、查看、切换、删除、新建分支"><a href="#三、查看、切换、删除、新建分支" class="headerlink" title="三、查看、切换、删除、新建分支"></a>三、查看、切换、删除、新建分支</h3><h5 id="查看本地分支"><a href="#查看本地分支" class="headerlink" title="查看本地分支"></a>查看本地分支</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch</span><br></pre></td></tr></table></figure>
+<h5 id="查看远程分支"><a href="#查看远程分支" class="headerlink" title="查看远程分支"></a>查看远程分支</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch -a</span><br></pre></td></tr></table></figure>
+<h5 id="切换本地分支"><a href="#切换本地分支" class="headerlink" title="切换本地分支"></a>切换本地分支</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout xxx</span><br></pre></td></tr></table></figure>
+<p>注意，每次切换分支，本地当前分支均不得有变动，否则需要先提交，在切换分支</p>
+<h5 id="删除本地分支"><a href="#删除本地分支" class="headerlink" title="删除本地分支"></a>删除本地分支</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch -D xxx</span><br></pre></td></tr></table></figure>
+<h5 id="新建分支"><a href="#新建分支" class="headerlink" title="新建分支"></a>新建分支</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git checkout -b xxx origin/master</span><br><span class="line">git push origin xxx</span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
+<p>这样新建的分支，是从远程matser分支上新建的分支，并且当远程master分支代码更改时，执行git pull，本地代码也会同步远程master上代码更改。由此新建的分支，push代码时需用 git push origin xxx。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git branch -b xxx</span><br><span class="line">git push</span><br><span class="line">git pull origin xxx</span><br></pre></td></tr></table></figure>
+<p>需先切换至主分支，比如master上，这样新建的分支，执行git pull origin xxx，本地代码只会同步远程xxx分支上代码更改，不会同步远程master分支的代码。由此新建的分支，push代码时需用 git push 。</p>
+<h3 id="四、解决冲突"><a href="#四、解决冲突" class="headerlink" title="四、解决冲突"></a>四、解决冲突</h3><h6 id="提交代码，最好是在gitlab上面合并分支，当提示有代码冲突时，关闭当前合并请求，并使用命令行按如下方式解决冲突。"><a href="#提交代码，最好是在gitlab上面合并分支，当提示有代码冲突时，关闭当前合并请求，并使用命令行按如下方式解决冲突。" class="headerlink" title="提交代码，最好是在gitlab上面合并分支，当提示有代码冲突时，关闭当前合并请求，并使用命令行按如下方式解决冲突。"></a>提交代码，最好是在gitlab上面合并分支，当提示有代码冲突时，关闭当前合并请求，并使用命令行按如下方式解决冲突。</h6><h6 id="主分支master-待合并分支-xugang"><a href="#主分支master-待合并分支-xugang" class="headerlink" title="主分支master,待合并分支 xugang"></a>主分支master,待合并分支 xugang</h6><ul>
+<li>1、 git checkout xugang</li>
+<li>2、 git pull</li>
+<li>3、 git checkout master</li>
+<li>4、 git pull</li>
+<li>5、 git merge xugang （此时会提示存在冲突文件）</li>
+<li>6、 git status         （查看存在冲突的文件）</li>
+<li>7、 git diff           （查看冲突详情）</li>
+<li>8、 在当前本地分支master上解决冲突，一定要本地运行，确保无误</li>
+<li>9、 git push   </li>
+<li>10、git checkout xugang   （这一步尤其重要，避免在master上直接更改代码。）</li>
+</ul>
+<h3 id="五、取消追踪-amp-追踪本地文件更改"><a href="#五、取消追踪-amp-追踪本地文件更改" class="headerlink" title="五、取消追踪&amp; 追踪本地文件更改"></a>五、取消追踪&amp; 追踪本地文件更改</h3><h5 id="取消追踪本地文件更改"><a href="#取消追踪本地文件更改" class="headerlink" title="取消追踪本地文件更改"></a>取消追踪本地文件更改</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git update-index --assume-unchanged src/config/server.json</span><br></pre></td></tr></table></figure>
+<p>让git取消对server.json的track。</p>
+<h5 id="恢复追踪本地文件更改"><a href="#恢复追踪本地文件更改" class="headerlink" title="恢复追踪本地文件更改"></a>恢复追踪本地文件更改</h5><pre><code>git update-index --no-assume-unchanged src/config/server.json
+</code></pre><p>让git能够追踪记录到此文件</p>
+]]></content>
+      <tags>
+        <tag>开发工具</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hexo</title>
     <url>/2017/12/21/hexo/</url>
     <content><![CDATA[<h5 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"xxxx"</span></span><br></pre></td></tr></table></figure>
@@ -420,6 +420,58 @@
 ]]></content>
       <tags>
         <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>js数组方法使用小结</title>
+    <url>/2017/12/20/js%E6%95%B0%E7%BB%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</url>
+    <content><![CDATA[<h5 id="1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"><a href="#1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组" class="headerlink" title="1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"></a>1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>有返回值，返回依条件返回的数组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr1 = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">const arr2 = arr1.filter((item)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item.name === <span class="string">'xugang'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">arr2   // arr2 = [&#123;name:<span class="string">'xugang'</span>,age:28&#125;]</span><br><span class="line"></span><br><span class="line">以上可以简写为：</span><br><span class="line">const arr2 = arr1.filter(item=&gt;item.name === <span class="string">'xugang'</span>);</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h5 id="2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"><a href="#2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。" class="headerlink" title="2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"></a>2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>会更改原数组</li>
+<li>有返回值，返回新的数组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	animal: <span class="string">'dag'</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">	animal: <span class="string">'cat'</span></span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">arr.map((item,index)=&gt;&#123;</span><br><span class="line">	item.color = <span class="string">'red'</span></span><br><span class="line">&#125;)</span><br><span class="line">arr   // arr = [&#123;animal: <span class="string">'dag'</span>,color: <span class="string">'red'</span>&#125;,&#123;animal: <span class="string">'cat'</span>,color: <span class="string">'red'</span>&#125;]</span><br></pre></td></tr></table></figure>
+<h5 id="3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"><a href="#3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。" class="headerlink" title="3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"></a>3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>有返回值: true or false</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 10</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &gt; 3</span><br><span class="line">&#125;)</span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h5 id="4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"><a href="#4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。" class="headerlink" title="4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"></a>4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>有返回值: true or false</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 2</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 1</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h5 id="4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。"><a href="#4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。" class="headerlink" title="4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。"></a>4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。</h5><ul>
+<li>参数：function(item,index,arr)</li>
+<li>不会更改原数组</li>
+<li>没有返回值</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"><span class="built_in">let</span> arr1 = [];</span><br><span class="line">arr.forEach((item,index)=&gt;&#123;</span><br><span class="line">	<span class="keyword">if</span>(item.name === <span class="string">'wangran'</span>)&#123;</span><br><span class="line">		arr1.push(item.age)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">arr1   // [27]</span><br></pre></td></tr></table></figure>
+<h5 id="5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"><a href="#5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。" class="headerlink" title="5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"></a>5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。</h5><ul>
+<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
+<li>不会更改原数组</li>
+<li>有返回值</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
+<h5 id="6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"><a href="#6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。" class="headerlink" title="6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"></a>6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。</h5><ul>
+<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
+<li>会更改原数组</li>
+<li>有返回值，始终都会返回一个数组，该数组中包含从原始数组中删除的项，如果没有删除任何项，则返回一个空数组</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>JS</tag>
+        <tag>数组</tag>
       </tags>
   </entry>
   <entry>
@@ -516,58 +568,6 @@
 ]]></content>
       <tags>
         <tag>开发工具</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>js数组方法使用小结</title>
-    <url>/2017/12/20/js%E6%95%B0%E7%BB%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/</url>
-    <content><![CDATA[<h5 id="1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"><a href="#1、filter-，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组" class="headerlink" title="1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组"></a>1、filter()，“过滤”功能，数组中的每一项运行给定函数，返回满足过滤条件组成的数组</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>有返回值，返回依条件返回的数组</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr1 = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">const arr2 = arr1.filter((item)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item.name === <span class="string">'xugang'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">arr2   // arr2 = [&#123;name:<span class="string">'xugang'</span>,age:28&#125;]</span><br><span class="line"></span><br><span class="line">以上可以简写为：</span><br><span class="line">const arr2 = arr1.filter(item=&gt;item.name === <span class="string">'xugang'</span>);</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h5 id="2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"><a href="#2、map-，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。" class="headerlink" title="2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。"></a>2、map()，指“映射”，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>会更改原数组</li>
-<li>有返回值，返回新的数组</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	animal: <span class="string">'dag'</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">	animal: <span class="string">'cat'</span></span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">arr.map((item,index)=&gt;&#123;</span><br><span class="line">	item.color = <span class="string">'red'</span></span><br><span class="line">&#125;)</span><br><span class="line">arr   // arr = [&#123;animal: <span class="string">'dag'</span>,color: <span class="string">'red'</span>&#125;,&#123;animal: <span class="string">'cat'</span>,color: <span class="string">'red'</span>&#125;]</span><br></pre></td></tr></table></figure>
-<h5 id="3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"><a href="#3、every-，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。" class="headerlink" title="3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。"></a>3、every()，判断数组中每一项都是否满足条件，只有所有项都满足条件，才会返回true。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>有返回值: true or false</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 10</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.every((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &gt; 3</span><br><span class="line">&#125;)</span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h5 id="4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"><a href="#4、some-，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。" class="headerlink" title="4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。"></a>4、some()，判断数组中是否存在满足条件的项，只要有一项满足条件，就会返回true。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>有返回值: true or false</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1, 2, 3, 4, 5];</span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 2</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">const status = arr.some((item,index)=&gt;&#123;</span><br><span class="line">	<span class="built_in">return</span> item &lt; 1</span><br><span class="line">&#125;)   </span><br><span class="line">status // <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-<h5 id="4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。"><a href="#4、forEach-，对数组进行遍历循环，对数组中的每一项运行给定函数。" class="headerlink" title="4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。"></a>4、forEach()，对数组进行遍历循环，对数组中的每一项运行给定函数。</h5><ul>
-<li>参数：function(item,index,arr)</li>
-<li>不会更改原数组</li>
-<li>没有返回值</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [&#123;</span><br><span class="line">	name: <span class="string">'xugang'</span>,</span><br><span class="line">	age: 28</span><br><span class="line">&#125;,&#123;</span><br><span class="line">	name: <span class="string">'wangran'</span>,</span><br><span class="line">	age: 27</span><br><span class="line">&#125;];</span><br><span class="line"><span class="built_in">let</span> arr1 = [];</span><br><span class="line">arr.forEach((item,index)=&gt;&#123;</span><br><span class="line">	<span class="keyword">if</span>(item.name === <span class="string">'wangran'</span>)&#123;</span><br><span class="line">		arr1.push(item.age)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">arr1   // [27]</span><br></pre></td></tr></table></figure>
-<h5 id="5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"><a href="#5、slice-，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。" class="headerlink" title="5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。"></a>5、slice()，返回从原数组中指定开始下标到结束下标之间的项组成的新数组。</h5><ul>
-<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
-<li>不会更改原数组</li>
-<li>有返回值</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
-<h5 id="6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"><a href="#6、splice-，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。" class="headerlink" title="6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。"></a>6、splice()，很强大的数组方法，它有很多种用法，可以实现删除、插入和替换。</h5><ul>
-<li>参数：接受一或两个参数，即要返回项的起始和结束位置。在只有一个参数的情况下，slice()方法返回从该参数指定位置开始（包括指定位置）到当前数组末尾的所有项。如果有两个参数，该方法返回起始和结束位置之间的项——但不包括结束位置的项。如果开始下标或者结束下标出现负数，则加上原数组长度，转换为正数。</li>
-<li>会更改原数组</li>
-<li>有返回值，始终都会返回一个数组，该数组中包含从原始数组中删除的项，如果没有删除任何项，则返回一个空数组</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">let</span> arr = [1,2,3,4,5,6,7,8]</span><br><span class="line">const arr1 = arr.slice(2)   // [3,4,5,6,7,8]，从起始下标（包含起始下标）开始到数组结束</span><br><span class="line">const arr2 = arr.slice(2,5) // [3,4,5] ，从起始下标（包含起始下标）开始到结束下标（不包含结束下标）</span><br><span class="line">const arr3 = arr.slice(2,-2) // [3,4,5,6]，结束下标为（-2 + 8 = 6）</span><br><span class="line">const arr4 = arr.slice(-3,-2) // [6]，开始下标为（-3 + 8 = 5），结束下标为（-2 + 8 = 6）</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>JS</tag>
-        <tag>数组</tag>
       </tags>
   </entry>
   <entry>
@@ -788,6 +788,49 @@
       </tags>
   </entry>
   <entry>
+    <title>闭包</title>
+    <url>/2020/12/02/%E9%97%AD%E5%8C%85/</url>
+    <content><![CDATA[<blockquote>
+<p>一步一步重温 <strong>JavaScript</strong> 基础系列。<br>本章节将会理解JS的闭包、闭包为何会造成内存泄漏，以及闭包相关考题</p>
+</blockquote>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><a id="more"></a>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p><strong>闭包，是指有权访问另一个函数作用域内的变量的函数</strong>。创建闭包的方式，常见如：在一个函数内部创建另外一个函数，并且将该函数作为返回值，同时该函数还引用了外部函数作用域内的变量。例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function foo1 () &#123;</span><br><span class="line">  var n = 1;</span><br><span class="line">  function foo2 () &#123;</span><br><span class="line">    alert(n)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return foo2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var f = foo1();</span><br><span class="line">f();  // 1</span><br></pre></td></tr></table></figure>
+<h3 id="更广泛的含义"><a href="#更广泛的含义" class="headerlink" title="更广泛的含义"></a>更广泛的含义</h3><p><strong>如果一个函数访问了此函数的父级或父级以上的作用域变量，该函数就可以称之为闭包</strong>。例如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var num = 1;</span><br><span class="line">(function(i) &#123;</span><br><span class="line">    console.log(i)</span><br><span class="line">&#125;)(num)</span><br></pre></td></tr></table></figure>
+<h2 id="闭包产生的原因"><a href="#闭包产生的原因" class="headerlink" title="闭包产生的原因"></a>闭包产生的原因</h2><p>在函数作用域外无法读取函数作用域内的变量，但是借助JS作用域链，函数内部的函数可以访问外层函数的变量。根据这一特性，就可以在函数内部创建并返回一个函数，将函数内部和函数外部作用域连接起来，由此便产生了闭包。</p>
+<h2 id="闭包的用途"><a href="#闭包的用途" class="headerlink" title="闭包的用途"></a>闭包的用途</h2><p>闭包可以让函数外部访问函数内局部作用域的变量，并且可以让该变量始终保存在内存中， 例如：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function fn () &#123;</span><br><span class="line">  var num = 3;</span><br><span class="line">  function fn1 () &#123;</span><br><span class="line">    alert(++num);</span><br><span class="line">  &#125;</span><br><span class="line">  return fn1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var fn2 = fn();</span><br><span class="line">fn2() // 4</span><br><span class="line">fn2() // 5</span><br></pre></td></tr></table></figure></p>
+<p>根据这一特性，可以解决实际场景中遇到的以下问题：</p>
+<ul>
+<li><p>引入的全局变量太多，极易产生全局变量命名冲突<br>例如：（Jquery）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">;(function($)&#123;</span><br><span class="line">  // 内部实现</span><br><span class="line">&#125;)(Jquery)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在开发JS插件时，为了保护插件内部变量不被改变<br>例如二（防止私有变量被污染）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const CHANGE_FONT_SIZE=&apos;CHANGE_FONT_SIZE&apos;;</span><br><span class="line"></span><br><span class="line">// 设置一个闭包，把变量保护起来，通过返回值调用</span><br><span class="line">function createStore() &#123;</span><br><span class="line">  let appState=&#123;</span><br><span class="line">    fontSize: &apos;26px&apos;,</span><br><span class="line">    color: &apos;red&apos;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 保护变量被修改，深克隆</span><br><span class="line">  let getter=()=&gt;JSON.parse(JSON.stringify(appState));</span><br><span class="line"></span><br><span class="line">  // 改变变量的方法，action代表一个命令对象，就是一个普通的js对象，起码需要一个字段控制命令类型type</span><br><span class="line">  let setter=(action)=&gt;&#123;</span><br><span class="line">    switch(action.type)&#123;</span><br><span class="line">      case CHANGE_FONT_SIZE:</span><br><span class="line">        appState.fontSize = action.fontSize;</span><br><span class="line">      default:</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  //返回出去的修改和取值的接口</span><br><span class="line">  return&#123;</span><br><span class="line">    getter,</span><br><span class="line">    setter</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let store=createStore();</span><br><span class="line"></span><br><span class="line">// 取值函数</span><br><span class="line">store.getter().fontSize;</span><br><span class="line"></span><br><span class="line">// 修改函数</span><br><span class="line">store.setter(&#123;type:CHANGE_FONT_SIZE, fontSize: &apos;30px&apos;&#125;);</span><br></pre></td></tr></table></figure>
+<p>如果需要对重要参数防止被篡改，可使用闭包规定变量的getter和setter<br>以上示例参考，<a href="https://www.cnblogs.com/GoCircle/p/9804106.html" target="_blank" rel="noopener">https://www.cnblogs.com/GoCircle/p/9804106.html</a></p>
+<p>例如三（利用闭包来完成对象的继承，做到函数的私有性和公开性）:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(function()&#123;</span><br><span class="line">  // Person模块</span><br><span class="line">  var Person = &#123;</span><br><span class="line">    // 数据部分</span><br><span class="line">    data: &#123;</span><br><span class="line">      name: &quot;&quot;,</span><br><span class="line">      age: &quot;&quot;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    // 操作部分</span><br><span class="line">    opt:&#123;</span><br><span class="line">      setName:function(name)&#123;</span><br><span class="line">        Person.data.name=name;     </span><br><span class="line">      &#125;,</span><br><span class="line">      setAge:function(age)&#123;</span><br><span class="line">        Person.data.age=age;</span><br><span class="line">      &#125;,</span><br><span class="line">      getName:function()&#123;</span><br><span class="line">        return Person.data.name; </span><br><span class="line">      &#125;,</span><br><span class="line">      getAge:function()&#123;</span><br><span class="line">        return Person.data.age; </span><br><span class="line">      &#125;,</span><br><span class="line">      init:function(name,age)&#123;</span><br><span class="line">        Person.opt.setName(name);</span><br><span class="line">        Person.opt.setAge(age);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    // 公开的API</span><br><span class="line">    openAPI:function()&#123;</span><br><span class="line">      return &#123;</span><br><span class="line">        init:Person.opt.init,</span><br><span class="line">        getName:Person.opt.getName,</span><br><span class="line">        getAge:Person.opt.getAge</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  window.Person = Person;</span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line">var p = window.Person.openAPI();</span><br><span class="line">p.init(&quot;wx&quot;, &quot;20&quot;);</span><br><span class="line">alert(p.getName());</span><br><span class="line">alert(p.getAge());</span><br></pre></td></tr></table></figure>
+<p>简单说一下jQuery的源码，其实整个jQuery其实就是一个自调函数:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(function(window)&#123;</span><br><span class="line">  // jQuery是一个函数，一个对象，一个构造器函数</span><br><span class="line">  var jQuery = function( selector, context ) &#123;</span><br><span class="line">    return new jQuery.fn.init( selector, context );</span><br><span class="line">  &#125;,</span><br><span class="line">  // 定义了jQuery的prototype的内容</span><br><span class="line">  // fn = prototype</span><br><span class="line">  // 加在jQuery的prototype上的方法可以通过选择器创建出来的对象调用</span><br><span class="line">  // 对象方法</span><br><span class="line">  jQuery.fn = jQuery.prototype = &#123;        </span><br><span class="line">    ready: function()&#123;&#125;,</span><br><span class="line">    each: function()&#123;&#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  // post方法和extend方法直接加在了jQuery对象上 </span><br><span class="line">  // 全局方法    </span><br><span class="line">  jQuery.post = function()&#123;&#125;,</span><br><span class="line">  jQuery.extend = function()&#123;&#125;</span><br><span class="line"></span><br><span class="line">  // 程序员在用jQuery的时候，是window的一个属性</span><br><span class="line">  //jQuery = $</span><br><span class="line">  window.jQuery = window.$ = jQuery;</span><br><span class="line">  $.fn = jQuery.prototype = window.$.prototype = window.$.fn = window.jQuery.fn = window.jQuery.prototype</span><br><span class="line"></span><br><span class="line">  // 加在jQuery的prototype上的方法和加在jQuery对象上的方法称为jQuery的插件开发</span><br><span class="line">&#125;)(window);</span><br><span class="line"></span><br><span class="line">  window.jQuery.fn=$.prototype=window.$.fn=jQuery.prototype=window.jQuery.prototype</span><br></pre></td></tr></table></figure>
+<p>以上示例参考，<a href="https://blog.csdn.net/canot/article/details/50760804" target="_blank" rel="noopener">https://blog.csdn.net/canot/article/details/50760804</a></p>
+<h2 id="闭包的副作用"><a href="#闭包的副作用" class="headerlink" title="闭包的副作用"></a>闭包的副作用</h2></li>
+<li>内存泄漏<br>如上例fn，fn1作为fn的返回值，形成闭包。fn1被赋值给全局变量fn2，导致fn1始终存在内存中，而fn1引用了父函数fn内的变量num，因此num也会一直在内存中，无法被垃圾回收机制（GC）回收。</li>
+</ul>
+<h2 id="闭包相关考题"><a href="#闭包相关考题" class="headerlink" title="闭包相关考题"></a>闭包相关考题</h2><ul>
+<li><p>考点一：闭包函数调用时，this指向全局window</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 例①</span><br><span class="line">var name = &quot;The Window&quot;;</span><br><span class="line">　var object = &#123;</span><br><span class="line">　　name : &quot;My Object&quot;,</span><br><span class="line">　　getNameFunc : function()&#123;</span><br><span class="line">　　  return function()&#123;</span><br><span class="line">　　　   return this.name;</span><br><span class="line">　　　&#125;;</span><br><span class="line">　　&#125;</span><br><span class="line">　&#125;;</span><br><span class="line"></span><br><span class="line">　alert(object.getNameFunc()());  // The Window</span><br><span class="line"></span><br><span class="line">// 例②</span><br><span class="line">var name = &quot;The Window&quot;;</span><br><span class="line">　var object = &#123;</span><br><span class="line">　　name : &quot;My Object&quot;,</span><br><span class="line">　　getNameFunc : function()&#123;</span><br><span class="line">    var that = this;</span><br><span class="line">　　   return function()&#123;</span><br><span class="line">　　　   return that.name;</span><br><span class="line">　　　 &#125;;</span><br><span class="line">　　&#125;</span><br><span class="line">　&#125;;</span><br><span class="line"></span><br><span class="line">　alert(object.getNameFunc()());  // My Object</span><br></pre></td></tr></table></figure>
+<p>题目引用自，<a href="http://www.ruanyifeng.com/blog/2009/08/learning_javascript_closures.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2009/08/learning_javascript_closures.html</a></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
+      <tags>
+        <tag>JS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>解决使用axios后POST请求会出现OPTIONS预请求问题</title>
     <url>/2018/03/27/%E8%A7%A3%E5%86%B3%E4%BD%BF%E7%94%A8axios%E5%90%8EPOST%E8%AF%B7%E6%B1%82%E4%BC%9A%E5%87%BA%E7%8E%B0OPTIONS%E9%A2%84%E8%AF%B7%E6%B1%82%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<blockquote>
@@ -799,20 +842,6 @@
 <p>关于这个问题，需要在后台接口进行设置，允许options请求，不然你的请求就会受到影响。如果请求方式为options，告诉它可以通讯，其他直接什么都不做。</p>
 <p><strong>那么问题来了，怎么避免额外发送options请求的问题？</strong><br>　　<br>1、Vue 使用，只需要把格式为json的参数用qs插件转换一下就好了</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 第一步：安装qs</span><br><span class="line">npm install qs</span><br><span class="line"></span><br><span class="line">// 第二步：main.js</span><br><span class="line">import axios from &apos;axios&apos;</span><br><span class="line">import qs from &apos;qs&apos;</span><br><span class="line"></span><br><span class="line">Vue.prototype.$http = axios</span><br><span class="line">Vue.prototype.$qs = qs</span><br><span class="line"></span><br><span class="line">// 第三步：（页面调用）</span><br><span class="line">this.$http(&#123;</span><br><span class="line">    method: &apos;post&apos;,</span><br><span class="line">    url: &apos;http://localhost:3000/user/login&apos;,</span><br><span class="line">        data: this.$qs.stringify(&#123;</span><br><span class="line">            account: &apos;xugang&apos;,</span><br><span class="line">            passwd: &apos;123456&apos;,</span><br><span class="line">            email: &apos;371801080@qq.com&apos;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;).then(function (response) &#123;</span><br><span class="line">        console.log(response);</span><br><span class="line">    &#125;).catch(function (error) &#123;</span><br><span class="line">        console.log(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>]]></content>
-      <tags>
-        <tag>JS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>闭包</title>
-    <url>/2020/12/02/%E9%97%AD%E5%8C%85/</url>
-    <content><![CDATA[<blockquote>
-<p>一步一步重温 <strong>JavaScript</strong> 基础系列。<br>本章节将会理解JS的闭包、闭包为何会造成内存泄漏，以及闭包相关考题</p>
-</blockquote>
-<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><a id="more"></a>]]></content>
-      <categories>
-        <category>JS基础</category>
-      </categories>
       <tags>
         <tag>JS</tag>
       </tags>
